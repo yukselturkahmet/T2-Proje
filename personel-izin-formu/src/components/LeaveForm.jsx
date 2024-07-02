@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-import logo from '../assets/logo.jpg'; // Logo dosyasının yolu
+import logo from '../assets/logo.jpg'; 
 
 const FormWrapper = styled.div`
   display: flex;
@@ -20,20 +20,20 @@ const FormContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1200px; /* Daha geniş bir form için genişliği arttırdık */
+  max-width: 1200px; 
   text-align: center;
 `;
 
 const Form = styled.form`
   display: flex;
-  flex-wrap: wrap; /* Form elemanlarının yan yana dizilmesini sağlar */
-  justify-content: space-between; /* Elemanlar arasındaki boşluk */
+  flex-wrap: wrap; 
+  justify-content: space-between; 
   margin-top: 20px;
 `;
 
 const FormGroup = styled.div`
   margin-bottom: 20px;
-  width: 48%; /* Elemanların yan yana dizilmesi için genişlik ayarı */
+  width: 48%; 
   text-align: left;
 `;
 
@@ -78,7 +78,7 @@ const Button = styled.button`
   font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 20px; /* Butonun formun altında olmasını sağlamak için margin eklendi */
+  margin-top: 20px; 
 
   &:hover {
     background-color: #45a049;
@@ -109,11 +109,14 @@ const LeaveForm = () => {
         },
         validationSchema: Yup.object({
             fullName: Yup.string()
-                .max(50, 'En fazla 50 karakter olabilir')
+                .max(50,'En fazla 50 karakter olabilir')
                 .required('Ad soyad zorunludur'),
             leaveType: Yup.string().required('İzin türü zorunludur'),
             startDate: Yup.date().required('Başlangıç tarihi zorunludur'),
-            endDate: Yup.date().required('Bitiş tarihi zorunludur'),
+            endDate: Yup.date().required('Bitiş tarihi zorunludur')
+                .when('startDate', (startDate, schema) => {
+                    return schema.min(startDate, 'Bitiş tarihi, Başlangıç tarihinden büyük olmalıdır');
+                }),
             duration: Yup.number().min(1, 'En az 1 gün olmalı').required('İzin süresi zorunludur'),
             reason: Yup.string()
                 .max(200, 'En fazla 200 karakter olabilir')
@@ -121,7 +124,6 @@ const LeaveForm = () => {
         }),
         onSubmit: (values) => {
             console.log(values);
-            // Form verilerini işleme
         },
     });
 
