@@ -44,8 +44,8 @@ const InputBox = styled.div`
   margin: 30px 0;
   width: 310px;
   border-bottom: 2px solid #161616;
-`;
 
+`;
 const InputLabel = styled.label`
   position: absolute;
   top: 50%;
@@ -56,6 +56,7 @@ const InputLabel = styled.label`
   pointer-events: none;
   transition: 0.325s;
 `;
+
 
 const Input = styled.input`
   width: 100%;
@@ -108,7 +109,13 @@ const AdminLink = styled.a`
   justify-content: center;
   display: flex;
   margin-top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
+
 
 const Title = styled.h2`
   text-align: center;
@@ -140,49 +147,53 @@ function LoginPage({ onLogin }) {
     },
   });
 
+  const handleAdminLogin = () => {
+    navigate('/admin-login'); // admin-login sayfasına yönlendirme
+  };
+
   return (
-      <>
-        <GlobalStyle />
-        <FormBox>
-          <Title>Login Page</Title>
-          <form onSubmit={formik.handleSubmit}>
-            <InputBox>
-              <Input
-                  type="text"
-                  name="username"
-                  placeholder=" "
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.username}
-              />
-              <InputLabel htmlFor="username">Username</InputLabel>
-              <Icon icon={faUser} />
-              {formik.touched.username && formik.errors.username ? (
-                  <Error>{formik.errors.username}</Error>
-              ) : null}
-            </InputBox>
-            <InputBox>
-              <Input
-                  type="password"
-                  name="password"
-                  placeholder=" "
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-              />
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Icon icon={faLock} />
-              {formik.touched.password && formik.errors.password ? (
-                  <Error>{formik.errors.password}</Error>
-              ) : null}
-            </InputBox>
-            <Button id="loginButton" type="submit">Login</Button>
-            <AdminLink href="#" target="_blank" id="adminLogin">
-              Admin Login
-            </AdminLink>
-          </form>
-        </FormBox>
-      </>
+    <>
+      <GlobalStyle />
+      <FormBox>
+        <Title>Login Page</Title>
+        <form onSubmit={formik.handleSubmit}>
+          <InputBox>
+            <Input
+              type="text"
+              name="username"
+              placeholder=" "
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+            />
+            <InputLabel htmlFor="username">Username</InputLabel>
+            <Icon icon={faUser} />
+            {formik.touched.username && formik.errors.username ? (
+              <Error>{formik.errors.username}</Error>
+            ) : null}
+          </InputBox>
+          <InputBox>
+            <Input
+              type="password"
+              name="password"
+              placeholder=" "
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            <InputLabel htmlFor="password">Password</InputLabel>
+            <Icon icon={faLock} />
+            {formik.touched.password && formik.errors.password ? (
+              <Error>{formik.errors.password}</Error>
+            ) : null}
+          </InputBox>
+          <Button id="loginButton" type="submit">Login</Button>
+          <AdminLink onClick={handleAdminLogin} id="adminLogin">
+            Admin Login
+          </AdminLink>
+        </form>
+      </FormBox>
+    </>
   );
 }
 
