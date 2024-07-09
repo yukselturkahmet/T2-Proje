@@ -44,8 +44,8 @@ const InputBox = styled.div`
   margin: 30px 0;
   width: 310px;
   border-bottom: 2px solid #161616;
-`;
 
+`;
 const InputLabel = styled.label`
   position: absolute;
   top: 50%;
@@ -56,6 +56,7 @@ const InputLabel = styled.label`
   pointer-events: none;
   transition: 0.325s;
 `;
+
 
 const Input = styled.input`
   width: 100%;
@@ -114,6 +115,7 @@ const AdminLink = styled.a`
     text-decoration: underline;
   }
 `;
+
 
 const Title = styled.h2`
   text-align: center;
