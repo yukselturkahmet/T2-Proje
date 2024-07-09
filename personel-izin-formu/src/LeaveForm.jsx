@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
-import logo from '../assets/logo.jpg'; 
+import logo from './assets/logo.jpg';
 
 const FormWrapper = styled.div`
   display: flex;
@@ -20,8 +20,9 @@ const FormContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 1200px; 
+  max-width: 5600px; 
   text-align: center;
+
 `;
 
 const Form = styled.form`
@@ -104,7 +105,8 @@ const LeaveForm = () => {
             leaveType: '',
             startDate: '',
             endDate: '',
-            duration: '',
+            saat: '',
+            gun: '',
             reason: '',
         },
         validationSchema: Yup.object({
@@ -195,10 +197,10 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>İzin Süresi (gün):</Label>
+                        <Label>İzin Süresi (saat):</Label>
                         <Input
                             type="number"
-                            name="duration"
+                            name="saat"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.duration}
@@ -206,6 +208,21 @@ const LeaveForm = () => {
                         {formik.touched.duration && formik.errors.duration ? (
                             <Error>{formik.errors.duration}</Error>
                         ) : null}
+                    
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>İzin Süresi (gün):</Label>
+                        <Input
+                            type="number"
+                            name="gun"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.duration}
+                        />
+                        {formik.touched.duration && formik.errors.duration ? (
+                            <Error>{formik.errors.duration}</Error>
+                        ) : null}
+                    
                     </FormGroup>
                     <FormGroup style={{ width: '100%' }}>
                         <Label>İzin Gerekçesi:</Label>
