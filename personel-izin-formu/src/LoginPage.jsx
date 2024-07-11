@@ -47,6 +47,7 @@ const InputBoxContainer = styled.div`
 `;
 
 const InputBox = styled.div`
+
     position: relative;
     border-bottom: 2px ridge rgba(255, 239, 213, 0.75);
 `;
@@ -61,6 +62,7 @@ const InputLabel = styled.label`
     pointer-events: none;
     transition: 0.325s;
 `;
+
 
 const Input = styled.input`
     width: 100%;
@@ -105,6 +107,7 @@ const Button = styled.button`
 `;
 
 const AdminLink = styled.a`
+
     text-align: center;
     color: rgba(255, 239, 213, 0.75);
     align-items: center;
@@ -120,6 +123,7 @@ const AdminLink = styled.a`
     }
 `;
 
+
 const Title = styled.h2`
     text-align: center;
     font-size: 2.8em;
@@ -134,6 +138,9 @@ const Error = styled.div`
 `;
 
 function LoginPage({ onLogin }) {
+
+
+
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -220,6 +227,8 @@ function LoginPage({ onLogin }) {
             </FormBox>
         </div>
     );
+
+
 }
 
 export default LoginPage;
