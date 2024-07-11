@@ -1,116 +1,234 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 
-const FormWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #055381;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+const GlobalStyle = createGlobalStyle`
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Britannic Bold', sans-serif;
+        font-weight: bold;
+    }
+
+    html, body {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: radial-gradient(900px, #144FC4, #48BB27);
+    }
 `;
 
-const FormContainer = styled.div`
-  background: #80b44a;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 520px;
-  width: 100%;
-  text-align: center;
-  margin: 0 580px; /* Added margin for better spacing on small screens */
+const FormBox = styled.div`
+    position: relative;
+    width: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border: 2px ridge rgba(255, 239, 213, 0.75);
+    border-radius: 30px;
+    backdrop-filter: blur(15px);
+    z-index: 1;
 `;
+
+const InputBoxContainer = styled.div`
+    width: 310px;
+    margin: 30px 0;
+`;
+
+const InputBox = styled.div`
+
+    position: relative;
+    border-bottom: 2px ridge rgba(255, 239, 213, 0.75);
+`;
+
+const InputLabel = styled.label`
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: rgba(255, 239, 213, 0.75);
+    font-size: 1em;
+    pointer-events: none;
+    transition: 0.325s;
+`;
+
+
 const Input = styled.input`
-  width: calc(100% - 20px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-bottom: 10px;
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0 35px 0 5px;
+    color: rgba(255, 239, 213, 0.75);
+
+    &:focus + ${InputLabel},
+    &:valid + ${InputLabel} {
+        top: -5px;
+    }
+`;
+
+const Icon = styled(FontAwesomeIcon)`
+    color: rgba(255, 239, 213, 0.75);
+    position: absolute;
+    right: 8px;
+    font-size: 1.5em;
+    top: 18.25px;
 `;
 
 const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
+    border: none;
+    position: relative;
+    text-align: center;
+    justify-content: center;
+    border-radius: 50px;
+    width: 100%;
+    height: 38px;
+    font-size: 1.6em;
+    font-weight: 700;
+    cursor: pointer;
+    background: transparent;
 
-  &:hover {
-    background-color: #0056b3;
-  }
+    &:hover {
+        color: rgba(255, 165, 0, 0.75);
+    }
 `;
+
+const AdminLink = styled.a`
+
+    text-align: center;
+    color: rgba(255, 239, 213, 0.75);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 26px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+        color: #FF7F00;
+    }
+`;
+
+
+const Title = styled.h2`
+    text-align: center;
+    font-size: 2.8em;
+`;
+
 const Error = styled.div`
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
+    color: red;
+    width: 100%;
+    text-align: center;
+    font-size: 1.08em;
+    margin-top: 5px;
 `;
+
 function LoginPage({ onLogin }) {
-  const navigate = useNavigate();
 
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-    },
-    validationSchema: Yup.object({
-      username: Yup.string().required('Kullanıcı adı zorunludur'),
-      password: Yup.string().required('Şifre zorunludur'),
-    }),
-    onSubmit: (values) => {
-      // Simulate successful login
-      onLogin();
-      navigate('/leave-form');
-      console.log(values);
-    },
-  });
 
-  return (
-    <FormWrapper>
-      <FormContainer>
-        <h1>Giriş Sayfası</h1>
-        <form onSubmit={formik.handleSubmit}>
-          <div>
-            <Input
-              type="text"
-              name="username"
-              placeholder="Username"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.username}
-            />
-            {formik.touched.username && formik.errors.username ? (
-              <Error>{formik.errors.username}</Error>
-            ) : null}
-          </div>
-          <div>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.password}
-            />
-            {formik.touched.password && formik.errors.password ? (
+
+    const navigate = useNavigate();
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+        validationSchema: Yup.object({
+            username: Yup.string()
+                .required('Username cannot be empty')
+                .min(6, 'Username should include a minimum of 6 characters.')
+                .max(25, 'Username cannot exceed 25 characters.')
+                .test('maxLength', 'Username has reached the maximum length of 25 characters.', value => value && value.length <= 25),
+            password: Yup.string()
+                .required('Password cannot be empty')
+                .min(6, 'Password should be a minimum of 6 characters.')
+                .max(25, 'Password cannot exceed 25 characters.')
+                .test('maxLength', 'Password has reached the maximum length of 25 characters.', value => value && value.length <= 25),
+        }),
+        onSubmit: (values) => {
+            onLogin();
+            navigate('/leave-form');
+            console.log(values);
+        },
+    });
+
+    const handleAdminLogin = () => {
+        navigate('/admin-login');
+    };
+
+    return (
+        <div className={"login-page"}>
+            <GlobalStyle />
+            <FormBox>
+                <Title>Log In</Title>
+                <form onSubmit={formik.handleSubmit}>
+                    <InputBoxContainer>
+                        <InputBox>
+                            <Input
+                                type="text"
+                                name="username"
+                                maxLength={25}
+                                placeholder=" "
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.username}
+                            />
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <Icon icon={faUser} />
+                        </InputBox>
+                        {formik.touched.username && formik.errors.username ? (
+                            <Error>{formik.errors.username}</Error>
+                        ) : null}
+                        {formik.values.username.length === 25 && (
+                            <Error>Username has reached the maximum length of 25 characters.</Error>
+                        )}
+                    </InputBoxContainer>
+                    <InputBoxContainer>
+                        <InputBox>
+                            <Input
+                                type="password"
+                                name="password"
+                                maxLength={25}
+                                placeholder=" "
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.password}
+                            />
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <Icon icon={faLock} />
+                        </InputBox>
+                        {formik.touched.password && formik.errors.password ? (
                             <Error>{formik.errors.password}</Error>
                         ) : null}
-            
-          </div>
-          <Button type="submit">Login</Button>
-        </form>
-      </FormContainer>
-    </FormWrapper>
-  );
+                        {formik.values.password.length === 25 && (
+                            <Error>Password has reached the maximum length of 25 characters.</Error>
+                        )}
+                    </InputBoxContainer>
+                    <Button id="loginButton" type="submit">Login</Button>
+                    <AdminLink onClick={handleAdminLogin} id="adminLogin">
+                        Admin Login
+                    </AdminLink>
+                </form>
+            </FormBox>
+        </div>
+    );
+
+
 }
 
 export default LoginPage;

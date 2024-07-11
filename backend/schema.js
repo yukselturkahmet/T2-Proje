@@ -19,8 +19,16 @@ export const typeDefs = gql`
     password_: String
   }
 
-  type Mutation {
-    createEmployeeLeave(input: CreateEmployeeLeaveInput!): Employee
+  type User {
+    employee_id: ID!
+    username: String
+    pword: String
+  }
+
+  type Query {
+    getEmployees: [Employee]
+    getAdmins: [Admin]
+    getUsers: [User]
   }
 
   input CreateEmployeeLeaveInput {
