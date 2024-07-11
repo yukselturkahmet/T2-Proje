@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LeaveForm from './LeaveForm';
@@ -19,19 +18,21 @@ function App() {
   };
 
   return (
-    <Router>
-      <AppWrapper>
-        <Routes>
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route
-            path="/leave-form"
-            element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}
-          />
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/" element={<Navigate to="/login" />} />
-        </Routes>
-      </AppWrapper>
-    </Router>
+
+      <Router>
+        <AppWrapper>
+          <Routes>
+            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+            <Route
+                path="/leave-form"
+                element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}
+            />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </AppWrapper>
+      </Router>
+
   );
 }
 

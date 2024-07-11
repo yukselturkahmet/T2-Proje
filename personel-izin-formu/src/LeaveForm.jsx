@@ -5,97 +5,97 @@ import styled from 'styled-components';
 import logo from './assets/logo.jpg';
 
 const FormWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
-  padding: 20px;
-  box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0;
 `;
 
 const FormContainer = styled.div`
-  background: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 5600px; 
-  text-align: center;
-
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
 `;
 
 const Form = styled.form`
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: space-between; 
-  margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 20px;
-  width: 48%; 
-  text-align: left;
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: left;
 `;
 
 const Label = styled.label`
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: black; /* Siyah font rengi */
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: black;
 `;
 
 const Input = styled.input`
-  width: calc(100% - 22px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Select = styled.select`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Textarea = styled.textarea`
-  width: calc(100% - 22px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Button = styled.button`
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 5px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 20px; 
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 
-  &:hover {
-    background-color: #45a049;
-  }
+    &:hover {
+        background-color: #45a049;
+    }
 `;
 
 const Error = styled.div`
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
 `;
 
 const Logo = styled.img`
-  width: 100px;
-  margin: 0 auto 20px;
-  display: block;
+    width: 100px;
+    margin: 0 auto 20px;
+    display: block;
 `;
 
 const LeaveForm = () => {
@@ -111,7 +111,7 @@ const LeaveForm = () => {
         },
         validationSchema: Yup.object({
             fullName: Yup.string()
-                .max(50,'En fazla 50 karakter olabilir')
+                .max(50, 'En fazla 50 karakter olabilir')
                 .required('Ad soyad zorunludur'),
             leaveType: Yup.string().required('İzin türü zorunludur'),
             startDate: Yup.date().required('Başlangıç tarihi zorunludur'),
@@ -121,7 +121,7 @@ const LeaveForm = () => {
                 }),
             duration: Yup.number().min(1, 'En az 1 gün olmalı').required('İzin süresi zorunludur'),
             reason: Yup.string()
-                .max(200, 'En fazla 200 karakter olabilir')
+                .max(200, 'Can be maximum 200 characters.')
                 .required('İzin gerekçesi zorunludur'),
         }),
         onSubmit: (values) => {
@@ -136,7 +136,7 @@ const LeaveForm = () => {
                 <h1>Personel İzin Formu</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
-                        <Label>Ad Soyad:</Label>
+                        <Label>Name-Surname:</Label>
                         <Input
                             type="text"
                             name="fullName"
@@ -171,7 +171,7 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>Başlangıç Tarihi:</Label>
+                        <Label>Start Day:</Label>
                         <Input
                             type="date"
                             name="startDate"
@@ -184,7 +184,7 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>Bitiş Tarihi:</Label>
+                        <Label>End Date:</Label>
                         <Input
                             type="date"
                             name="endDate"
@@ -203,12 +203,11 @@ const LeaveForm = () => {
                             name="saat"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.duration}
+                            value={formik.values.saat}
                         />
-                        {formik.touched.duration && formik.errors.duration ? (
-                            <Error>{formik.errors.duration}</Error>
+                        {formik.touched.saat && formik.errors.saat ? (
+                            <Error>{formik.errors.saat}</Error>
                         ) : null}
-                    
                     </FormGroup>
                     <FormGroup>
                         <Label>İzin Süresi (gün):</Label>
@@ -217,12 +216,11 @@ const LeaveForm = () => {
                             name="gun"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.duration}
+                            value={formik.values.gun}
                         />
-                        {formik.touched.duration && formik.errors.duration ? (
-                            <Error>{formik.errors.duration}</Error>
+                        {formik.touched.gun && formik.errors.gun ? (
+                            <Error>{formik.errors.gun}</Error>
                         ) : null}
-                    
                     </FormGroup>
                     <FormGroup style={{ width: '100%' }}>
                         <Label>İzin Gerekçesi:</Label>
@@ -236,7 +234,7 @@ const LeaveForm = () => {
                             <Error>{formik.errors.reason}</Error>
                         ) : null}
                     </FormGroup>
-                    <Button type="submit">Gönder</Button>
+                    <Button type="submit">Submit</Button>
                 </Form>
             </FormContainer>
         </FormWrapper>
