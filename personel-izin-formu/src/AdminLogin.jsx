@@ -1,7 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 import * as Yup from 'yup';
 
 const FormWrapper = styled.div`
@@ -37,7 +37,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 10px;
-    background-color:#0056b3 ;
+    background-color: #0056b3;
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -46,7 +46,7 @@ const Button = styled.button`
     margin-top: 10px;
 
     &:hover {
-        background-color:#ff7f00 ;
+        background-color: #ff7f00;
     }
 `;
 
@@ -55,7 +55,7 @@ const Error = styled.div`
     font-size: 1.2em;
 `;
 
-function AdminLogin({ onLogin }) {
+function AdminLogin({onLogin}) {
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -64,8 +64,11 @@ function AdminLogin({ onLogin }) {
             password: '',
         },
         validationSchema: Yup.object({
-            username: Yup.string().required('Username can not be empty'),
-            password: Yup.string().required('Password can not be empty'),
+            username: Yup.string()
+                .required('Username can not be empty'),
+            password: Yup.string()
+                .required('Password can not be empty')
+                .min(6, 'Password should include a minimum of 6 characters.'),
         }),
         onSubmit: (values) => {
             // Simulate successful login
@@ -78,7 +81,7 @@ function AdminLogin({ onLogin }) {
     return (
         <FormWrapper>
             <FormContainer>
-                <h1 style={{ color: '#000000' }}>Admin Login</h1>
+                <h1 style={{color: '#000000'}}>Admin Login</h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div>
                         <Input

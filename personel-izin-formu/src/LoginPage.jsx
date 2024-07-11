@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import styled, {createGlobalStyle} from 'styled-components';
-import {useFormik} from 'formik';
+import { useNavigate } from 'react-router-dom';
+import styled, { createGlobalStyle } from 'styled-components';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUser, faLock} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 
 const GlobalStyle = createGlobalStyle`
     * {
@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
 const FormBox = styled.div`
     position: relative;
     width: 400px;
-    height: 450px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,10 +41,13 @@ const FormBox = styled.div`
     z-index: 1;
 `;
 
+const InputBoxContainer = styled.div`
+    width: 310px;
+    margin: 30px 0;
+`;
+
 const InputBox = styled.div`
     position: relative;
-    margin: 30px 0;
-    width: 310px;
     border-bottom: 2px ridge rgba(255, 239, 213, 0.75);
 `;
 
@@ -126,10 +129,11 @@ const Error = styled.div`
     color: red;
     width: 100%;
     text-align: center;
-    font-size: 100%;
+    font-size: 1.08em;
+    margin-top: 5px;
 `;
 
-function LoginPage({onLogin}) {
+function LoginPage({ onLogin }) {
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -138,16 +142,16 @@ function LoginPage({onLogin}) {
             password: '',
         },
         validationSchema: Yup.object({
-            username: Yup.string().required('Username can not be empty')
-                .min(6, `Username should include min. 6 characters.`)
-                .max(25, `Username can not exceed 25 characters.`),
-
-
-            password: Yup.string().required('Password can not be empty')
-                .min(6, `Password should be min. 6 characters.`)
-                .max(25, `Password can not  exceed 25 characters.`),
-
-
+            username: Yup.string()
+                .required('Username cannot be empty')
+                .min(6, 'Username should include a minimum of 6 characters.')
+                .max(25, 'Username cannot exceed 25 characters.')
+                .test('maxLength', 'Username has reached the maximum length of 25 characters.', value => value && value.length <= 25),
+            password: Yup.string()
+                .required('Password cannot be empty')
+                .min(6, 'Password should be a minimum of 6 characters.')
+                .max(25, 'Password cannot exceed 25 characters.')
+                .test('maxLength', 'Password has reached the maximum length of 25 characters.', value => value && value.length <= 25),
         }),
         onSubmit: (values) => {
             onLogin();
@@ -161,48 +165,60 @@ function LoginPage({onLogin}) {
     };
 
     return (
-        <>
-            <GlobalStyle/>
+        <div className={"login-page"}>
+            <GlobalStyle />
             <FormBox>
                 <Title>Log In</Title>
                 <form onSubmit={formik.handleSubmit}>
-                    <InputBox>
-                        <Input
-                            type="text"
-                            name="username"
-                            placeholder=" "
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.username}
-                        />
-                        <InputLabel htmlFor="username">Username</InputLabel>
-                        <Icon icon={faUser}/>
-                    </InputBox>
-                    {formik.touched.username && formik.errors.username ? (
-                        <Error>{formik.errors.username}</Error>
-                    ) : null}
-                    <InputBox>
-                        <Input
-                            type="password"
-                            name="password"
-                            placeholder=" "
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.password}
-                        />
-                        <InputLabel htmlFor="password">Password</InputLabel>
-                        <Icon icon={faLock}/>
-                    </InputBox>
-                    {formik.touched.password && formik.errors.password ? (
-                        <Error>{formik.errors.password}</Error>
-                    ) : null}
+                    <InputBoxContainer>
+                        <InputBox>
+                            <Input
+                                type="text"
+                                name="username"
+                                maxLength={25}
+                                placeholder=" "
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.username}
+                            />
+                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <Icon icon={faUser} />
+                        </InputBox>
+                        {formik.touched.username && formik.errors.username ? (
+                            <Error>{formik.errors.username}</Error>
+                        ) : null}
+                        {formik.values.username.length === 25 && (
+                            <Error>Username has reached the maximum length of 25 characters.</Error>
+                        )}
+                    </InputBoxContainer>
+                    <InputBoxContainer>
+                        <InputBox>
+                            <Input
+                                type="password"
+                                name="password"
+                                maxLength={25}
+                                placeholder=" "
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.password}
+                            />
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <Icon icon={faLock} />
+                        </InputBox>
+                        {formik.touched.password && formik.errors.password ? (
+                            <Error>{formik.errors.password}</Error>
+                        ) : null}
+                        {formik.values.password.length === 25 && (
+                            <Error>Password has reached the maximum length of 25 characters.</Error>
+                        )}
+                    </InputBoxContainer>
                     <Button id="loginButton" type="submit">Login</Button>
                     <AdminLink onClick={handleAdminLogin} id="adminLogin">
                         Admin Login
                     </AdminLink>
                 </form>
             </FormBox>
-        </>
+        </div>
     );
 }
 
