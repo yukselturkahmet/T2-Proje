@@ -21,7 +21,7 @@ const FormContainer = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
+    height: 100%;
     text-align: center;
 `;
 
@@ -34,7 +34,7 @@ const Form = styled.form`
 
 const FormGroup = styled.div`
     margin-bottom: 20px;
-    width: 100%;
+    width: 49%;
     text-align: left;
 `;
 
@@ -130,8 +130,8 @@ const LeaveForm = () => {
     });
 
     return (
-        <FormWrapper>
-            <FormContainer>
+        <FormWrapper className={"leave-form"}>
+            <FormContainer >
                 <Logo src={logo} alt="Logo" />
                 <h1>Personel İzin Formu</h1>
                 <Form onSubmit={formik.handleSubmit}>

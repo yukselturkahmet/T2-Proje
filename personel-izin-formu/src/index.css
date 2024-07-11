@@ -1,3 +1,18 @@
+.leave-form{
+    width: 100%;
+}
+
+
+.login-page{
+    margin: auto;
+}
+#root{
+    width: 100%;
+}
+#root > div {
+    display: flex;
+}
+
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
