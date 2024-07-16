@@ -137,7 +137,7 @@ const Error = styled.div`
     margin-top: 5px;
 `;
 
-// eslint-disable-next-line react/prop-types
+
 function LoginPage({ onLogin }) {
 
 
@@ -152,7 +152,7 @@ function LoginPage({ onLogin }) {
         validationSchema: Yup.object({
             username: Yup.string()
                 .required('Username cannot be empty')
-                .min(6, 'Username should include a minimum of 6 characters.')
+                .min(4, 'Username should include a minimum of 4 characters.')
                 .max(25, 'Username cannot exceed 25 characters.')
                 .test('maxLength', 'Username has reached the maximum length of 25 characters.', value => value && value.length <= 25),
             password: Yup.string()

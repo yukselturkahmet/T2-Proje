@@ -1,6 +1,11 @@
-.required::after{
+.required::after {
     content: "*";
     color: red;
+}
+
+.staff_form_txt {
+    color: #28282B;
+    font-weight: 800;
 }
 
 .leave-form {

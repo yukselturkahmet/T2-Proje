@@ -107,37 +107,40 @@ const LeaveForm = () => {
     const formik = useFormik({
         initialValues: {
             firstName: '',
-            surName: '',
+            lastName: '',
             leaveType: '',
             startDate: '',
             endDate: '',
-            saat: '',
+            hour: '',
             day: '',
             reason: '',
         },
         validationSchema: Yup.object({
             firstName: Yup.string()
-                .max(50, 'En fazla 50 karakter olabilir')
+                .max(50, 'Can be maximum 50 characters.')
                 .required('This field cannot be left empty.')
                 .test('maxLength', 'Name field has reached the maximum length of 50 characters.', value => value && value.length <= 25),
-            surName: Yup.string()
-                .max(50, 'En fazla 50 karakter olabilir')
+            lastName: Yup.string()
+                .max(50, 'Can be maximum 50 characters.')
                 .required('This field cannot be left empty.'),
             leaveType: Yup.string()
-                .required('İzin türü zorunludur'),
+                .required('Permit Type is required'),
             startDate: Yup.date()
-                .required('Başlangıç tarihi zorunludur'),
-            endDate: Yup.date().required('Bitiş tarihi zorunludur')
+                .required('Start date is required'),
+            endDate: Yup.date()
+                .required('End date is required')
                 .when('startDate', (startDate, schema) => {
-                    return schema.min(startDate, 'Bitiş tarihi, Başlangıç tarihinden büyük olmalıdır');
+                    return schema.min(startDate, 'End date must be bigger than start date.');
+
                 }),
-            duration: Yup.number().min(1, 'En az 1 gün olmalı').required('İzin süresi zorunludur'),
+            duration: Yup.number().min(1, 'It can min. 1 day').required('Duration of permit is required.'),
             reason: Yup.string()
                 .max(200, 'Can be maximum 200 characters.')
-                .required('İzin gerekçesi zorunludur'),
+                .required('Reason of permit is required.'),
         }),
         onSubmit: (values) => {
             console.log(values);
+            window.alert("Your Form Has Submitted.")
         },
     });
 
@@ -145,7 +148,7 @@ const LeaveForm = () => {
         <FormWrapper className={"leave-form"}>
             <FormContainer>
                 <Logo src={logo} alt="Logo"/>
-                <h1>Staff Permit Form</h1>
+                <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <Label className={"required"}>Name:</Label>
@@ -165,14 +168,14 @@ const LeaveForm = () => {
                         <Label className={"required"}>Surname:</Label>
                         <Input
                             type="text"
-                            name="surName"
+                            name="lastName"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.surName}
+                            value={formik.values.lastName}
                             maxLength={50}
                         />
-                        {formik.touched.surName && formik.errors.surName ? (
-                            <Error>{formik.errors.surName}</Error>
+                        {formik.touched.lastName && formik.errors.lastName ? (
+                            <Error>{formik.errors.lastName}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
@@ -227,20 +230,20 @@ const LeaveForm = () => {
                         <Label>Permit Duration (hour):</Label>
                         <Input
                             type="number"
-                            name="saat"
+                            name="hour"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.saat}
+                            value={formik.values.hour}
                         />
-                        {formik.touched.saat && formik.errors.saat ? (
-                            <Error>{formik.errors.saat}</Error>
+                        {formik.touched.hour && formik.errors.hour ? (
+                            <Error>{formik.errors.hour}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label className={"required"}>Permit Duration (Day):</Label>
                         <Input
                             type="number"
-                            name="gun"
+                            name="day"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.day}

@@ -32,6 +32,7 @@ const Input = styled.input`
     border-radius: 5px;
     font-size: 16px;
     margin-bottom: 10px;
+    font-weight: bold;
 `;
 
 const Button = styled.button`
@@ -44,6 +45,7 @@ const Button = styled.button`
     font-size: 16px;
     cursor: pointer;
     margin-top: 10px;
+    font-weight: bold;
 
     &:hover {
         background-color: #ff7f00;
@@ -66,7 +68,7 @@ function AdminLogin({onLogin}) {
         validationSchema: Yup.object({
             username: Yup.string()
                 .required('Username can not be empty')
-                .min(3,`Username should include a minimum of 3 characters.`),
+                .min(4, `Username should include a minimum of 4 characters.`),
             password: Yup.string()
                 .required('Password can not be empty')
                 .min(6, 'Password should include a minimum of 6 characters.'),
