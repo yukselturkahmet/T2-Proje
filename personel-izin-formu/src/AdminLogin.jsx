@@ -65,7 +65,8 @@ function AdminLogin({onLogin}) {
         },
         validationSchema: Yup.object({
             username: Yup.string()
-                .required('Username can not be empty'),
+                .required('Username can not be empty')
+                .min(3,`Username should include a minimum of 3 characters.`),
             password: Yup.string()
                 .required('Password can not be empty')
                 .min(6, 'Password should include a minimum of 6 characters.'),

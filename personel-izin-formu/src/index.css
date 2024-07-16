@@ -1,14 +1,20 @@
-.leave-form{
+.required::after{
+    content: "*";
+    color: red;
+}
+
+.leave-form {
     width: 100%;
 }
 
-
-.login-page{
+.login-page {
     margin: auto;
 }
-#root{
+
+#root {
     width: 100%;
 }
+
 #root > div {
     display: flex;
 }

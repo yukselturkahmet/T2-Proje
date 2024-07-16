@@ -1,8 +1,9 @@
-import React from 'react';
-import { useFormik } from 'formik';
+import React, {useState} from 'react';
+import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import logo from './assets/logo.jpg';
+
 
 const FormWrapper = styled.div`
     display: flex;
@@ -53,6 +54,10 @@ const Input = styled.input`
     font-size: 16px;
 `;
 
+const DateInput = styled(Input)`
+    width: 100%;
+`;
+
 const Select = styled.select`
     width: 100%;
     padding: 10px;
@@ -74,7 +79,7 @@ const Button = styled.button`
     padding: 15px;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
+    background-color: #1af122;
     color: white;
     font-size: 18px;
     cursor: pointer;
@@ -82,7 +87,7 @@ const Button = styled.button`
     margin-top: 20px;
 
     &:hover {
-        background-color: #45a049;
+        background-color: rgb(255, 165, 0);;
     }
 `;
 
@@ -101,20 +106,27 @@ const Logo = styled.img`
 const LeaveForm = () => {
     const formik = useFormik({
         initialValues: {
-            fullName: '',
+            firstName: '',
+            surName: '',
             leaveType: '',
             startDate: '',
             endDate: '',
             saat: '',
-            gun: '',
+            day: '',
             reason: '',
         },
         validationSchema: Yup.object({
-            fullName: Yup.string()
+            firstName: Yup.string()
                 .max(50, 'En fazla 50 karakter olabilir')
-                .required('Ad soyad zorunludur'),
-            leaveType: Yup.string().required('İzin türü zorunludur'),
-            startDate: Yup.date().required('Başlangıç tarihi zorunludur'),
+                .required('This field cannot be left empty.')
+                .test('maxLength', 'Name field has reached the maximum length of 50 characters.', value => value && value.length <= 25),
+            surName: Yup.string()
+                .max(50, 'En fazla 50 karakter olabilir')
+                .required('This field cannot be left empty.'),
+            leaveType: Yup.string()
+                .required('İzin türü zorunludur'),
+            startDate: Yup.date()
+                .required('Başlangıç tarihi zorunludur'),
             endDate: Yup.date().required('Bitiş tarihi zorunludur')
                 .when('startDate', (startDate, schema) => {
                     return schema.min(startDate, 'Bitiş tarihi, Başlangıç tarihinden büyük olmalıdır');
@@ -131,48 +143,41 @@ const LeaveForm = () => {
 
     return (
         <FormWrapper className={"leave-form"}>
-            <FormContainer >
-                <Logo src={logo} alt="Logo" />
-                <h1>Personel İzin Formu</h1>
+            <FormContainer>
+                <Logo src={logo} alt="Logo"/>
+                <h1>Staff Permit Form</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
-                        <Label>Name-Surname:</Label>
+                        <Label className={"required"}>Name:</Label>
                         <Input
                             type="text"
-                            name="fullName"
+                            name="firstName"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.fullName}
+                            value={formik.values.firstName}
+                            maxLength={25}
                         />
-                        {formik.touched.fullName && formik.errors.fullName ? (
-                            <Error>{formik.errors.fullName}</Error>
+                        {formik.touched.firstName && formik.errors.firstName ? (
+                            <Error>{formik.errors.firstName}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>İzin Türü:</Label>
-                        <Select
-                            name="leaveType"
+                        <Label className={"required"}>Surname:</Label>
+                        <Input
+                            type="text"
+                            name="surName"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.leaveType}
-                        >
-                            <option value="" label="Seçiniz" />
-                            <option value="Yıllık İzin" label="Yıllık İzin" />
-                            <option value="Mahsup İzin" label="Mahsup İzin" />
-                            <option value="Mazeret İzni" label="Mazeret İzni" />
-                            <option value="Ücretsiz İzin" label="Ücretsiz İzin" />
-                            <option value="Hastalık İzni" label="Hastalık İzni" />
-                            <option value="Doğum Sonrası İzin" label="Doğum Sonrası İzin" />
-                            <option value="Ölüm İzni" label="Ölüm İzni" />
-                            <option value="Evlilik İzni" label="Evlilik İzni" />
-                        </Select>
-                        {formik.touched.leaveType && formik.errors.leaveType ? (
-                            <Error>{formik.errors.leaveType}</Error>
+                            value={formik.values.surName}
+                            maxLength={50}
+                        />
+                        {formik.touched.surName && formik.errors.surName ? (
+                            <Error>{formik.errors.surName}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>Start Day:</Label>
-                        <Input
+                        <Label className={"required"}>Start Day:</Label>
+                        <DateInput
                             type="date"
                             name="startDate"
                             onChange={formik.handleChange}
@@ -184,8 +189,8 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>End Date:</Label>
-                        <Input
+                        <Label className={"required"}>End Date:</Label>
+                        <DateInput
                             type="date"
                             name="endDate"
                             onChange={formik.handleChange}
@@ -197,7 +202,29 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>İzin Süresi (saat):</Label>
+                        <Label className={"required"}>Permit Type:</Label>
+                        <Select
+                            name="leaveType"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.leaveType}
+                        >
+                            <option value="" label="Seçiniz"/>
+                            <option value="Annual Leave" label="Annual Leave"/>
+                            <option value="Offset Permit" label="Offset Permit"/> --Mahsup izin ingilizceye cevirirken offset oldugundan emin degilim.
+                            <option value="Casual Leave " label="Casual Leave"/>
+                            <option value="Unpaid Vacation" label="Unpaid Vacation"/>
+                            <option value="Sick Leave" label="Sick Leave"/>
+                            <option value="After Birth Permit" label="After Birth Permit"/>
+                            <option value="Death Permit" label="Death Permit"/>
+                            <option value="Marriage Permit" label="Marriage Permit"/>
+                        </Select>
+                        {formik.touched.leaveType && formik.errors.leaveType ? (
+                            <Error>{formik.errors.leaveType}</Error>
+                        ) : null}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Permit Duration (hour):</Label>
                         <Input
                             type="number"
                             name="saat"
@@ -210,20 +237,20 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label>İzin Süresi (gün):</Label>
+                        <Label className={"required"}>Permit Duration (Day):</Label>
                         <Input
                             type="number"
                             name="gun"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.gun}
+                            value={formik.values.day}
                         />
-                        {formik.touched.gun && formik.errors.gun ? (
-                            <Error>{formik.errors.gun}</Error>
+                        {formik.touched.day && formik.errors.day ? (
+                            <Error>{formik.errors.day}</Error>
                         ) : null}
                     </FormGroup>
-                    <FormGroup style={{ width: '100%' }}>
-                        <Label>İzin Gerekçesi:</Label>
+                    <FormGroup style={{width: '100%'}}>
+                        <Label className={"required"}>Permit Reason:</Label>
                         <Textarea
                             name="reason"
                             onChange={formik.handleChange}
