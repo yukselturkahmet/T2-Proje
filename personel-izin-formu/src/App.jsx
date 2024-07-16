@@ -18,6 +18,7 @@ function App() {
   };
 
   return (
+
       <Router>
         <AppWrapper>
           <Routes>
@@ -31,6 +32,7 @@ function App() {
           </Routes>
         </AppWrapper>
       </Router>
+
   );
 }
 
