@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -47,7 +46,6 @@ const InputBoxContainer = styled.div`
 `;
 
 const InputBox = styled.div`
-
     position: relative;
     border-bottom: 2px ridge rgba(255, 239, 213, 0.75);
 `;
@@ -62,7 +60,6 @@ const InputLabel = styled.label`
     pointer-events: none;
     transition: 0.325s;
 `;
-
 
 const Input = styled.input`
     width: 100%;
@@ -95,7 +92,7 @@ const Button = styled.button`
     justify-content: center;
     border-radius: 50px;
     width: 100%;
-    height: 38px;
+    height: 55px;
     font-size: 1.6em;
     font-weight: 700;
     cursor: pointer;
@@ -107,7 +104,6 @@ const Button = styled.button`
 `;
 
 const AdminLink = styled.a`
-
     text-align: center;
     color: rgba(255, 239, 213, 0.75);
     align-items: center;
@@ -123,7 +119,6 @@ const AdminLink = styled.a`
     }
 `;
 
-
 const Title = styled.h2`
     text-align: center;
     font-size: 2.8em;
@@ -138,9 +133,6 @@ const Error = styled.div`
 `;
 
 function LoginPage({ onLogin }) {
-
-
-
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -151,7 +143,7 @@ function LoginPage({ onLogin }) {
         validationSchema: Yup.object({
             username: Yup.string()
                 .required('Username cannot be empty')
-                .min(6, 'Username should include a minimum of 6 characters.')
+                .min(4, 'Username should include a minimum of 4 characters.')
                 .max(25, 'Username cannot exceed 25 characters.')
                 .test('maxLength', 'Username has reached the maximum length of 25 characters.', value => value && value.length <= 25),
             password: Yup.string()
@@ -160,11 +152,50 @@ function LoginPage({ onLogin }) {
                 .max(25, 'Password cannot exceed 25 characters.')
                 .test('maxLength', 'Password has reached the maximum length of 25 characters.', value => value && value.length <= 25),
         }),
-        onSubmit: (values) => {
-            onLogin();
-            navigate('/leave-form');
-            console.log(values);
+        
+
+        onSubmit: async (values) => {
+            try {
+                const response = await fetch('http://localhost:4000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: `
+                            mutation CreateUser($input: CreateUserInput!) {
+                                createUser(input: $input) {
+                                    employee_id
+                                    username
+                                    pword
+                                }
+                            }
+                        `,
+                        variables: {
+                            input: {
+                                username: values.username,
+                                pword: values.password,
+                            },
+                        },
+                    }),
+                });
+        
+                const data = await response.json();
+        
+                if (data.errors) {
+                    console.error('GraphQL Error:', data.errors);
+                    // Handle GraphQL errors here, e.g., display error message to user
+                } else {
+                    onLogin();
+                    navigate('/leave-form');
+                    console.log('User created successfully:', data.data.createUser);
+                }
+            } catch (error) {
+                console.error('Network Error:', error);
+                // Handle network errors here
+            }
         },
+        
     });
 
     const handleAdminLogin = () => {
@@ -178,7 +209,7 @@ function LoginPage({ onLogin }) {
                 <Title>Log In</Title>
                 <form onSubmit={formik.handleSubmit}>
                     <InputBoxContainer>
-                        <InputBox>
+                        <InputBox >
                             <Input
                                 type="text"
                                 name="username"
@@ -188,7 +219,7 @@ function LoginPage({ onLogin }) {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.username}
                             />
-                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <InputLabel htmlFor="username" >Username</InputLabel>
                             <Icon icon={faUser} />
                         </InputBox>
                         {formik.touched.username && formik.errors.username ? (
@@ -227,8 +258,6 @@ function LoginPage({ onLogin }) {
             </FormBox>
         </div>
     );
-
-
 }
 
 export default LoginPage;

@@ -12,8 +12,32 @@ const resolvers = {
     },
     async getUsers() {
       return await User.findAll();
+    },
+  },
+  Mutation: {
+    async createEmployeeLeave(_, { input }) {
+      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname,lastname, reason } = input;
+      const newEmployeeLeave = await Employee.create({
+        start_date,
+        end_date,
+        leave_duration_day,
+        leave_duration_hour,
+        leave_type,
+        firstname,
+        lastname,
+        reason
+      });
+      return newEmployeeLeave;
+    },
+    async createUser(_, { input }) {
+      const { username, pword } = input;
+      const newUser = await User.create({
+        
+        username,
+        pword
+      });
+      return newUser;
     }
-    
   }
 };
 

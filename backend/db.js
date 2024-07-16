@@ -29,7 +29,10 @@ const Employee = sequelize.define('Employee', {
   leave_type: {
     type: DataTypes.STRING
   },
-  name_surname: {
+  firstname: {
+    type: DataTypes.STRING
+  },
+  lastname: {
     type: DataTypes.STRING
   },
   reason: {
@@ -80,3 +83,4 @@ const User = sequelize.define('User', {
 });
 
 export { sequelize, Employee, Admin, User };
+ 
