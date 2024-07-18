@@ -4,6 +4,7 @@ import LeaveForm from './LeaveForm';
 import LoginPage from './LoginPage';
 import AdminLogin from './AdminLogin';
 import styled from 'styled-components';
+import AdminPage from "./AdminPage"
 
 const AppWrapper = styled.div`
   font-family: 'Arial', sans-serif;
@@ -19,19 +20,21 @@ function App() {
 
   return (
 
-      <Router>
-        <AppWrapper>
-          <Routes>
-            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-            <Route
-                path="/leave-form"
-                element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}
-            />
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/" element={<Navigate to="/login" />} />
-          </Routes>
-        </AppWrapper>
-      </Router>
+    <Router>
+      <AppWrapper>
+        <Routes>
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/leave-form"
+            element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}
+          />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin-page" element={<AdminPage />} />
+
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      </AppWrapper>
+    </Router>
 
   );
 }

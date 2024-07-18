@@ -117,7 +117,7 @@ const Error = styled.div`
 
 
 
-function AdminLogin({ onLogin }) {
+function AdminLogin() {
 
     const navigate = useNavigate();
 
@@ -145,9 +145,8 @@ function AdminLogin({ onLogin }) {
 
             // Simulate successful login
 
-            onLogin();
 
-            navigate('/leave-form');
+            navigate('/admin-page');
 
             console.log(values);
 
