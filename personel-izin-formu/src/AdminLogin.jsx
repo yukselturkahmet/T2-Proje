@@ -58,6 +58,7 @@ const Error = styled.div`
 `;
 
 function AdminLogin({ onLogin }) {
+
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -75,8 +76,10 @@ function AdminLogin({ onLogin }) {
         }),
         onSubmit: (values) => {
             // Simulate successful login
+
             onLogin();
             navigate('/leave-form');
+
             console.log(values);
             console.log('Successful Login');
         },
