@@ -132,6 +132,7 @@ const Error = styled.div`
     margin-top: 5px;
 `;
 
+// eslint-disable-next-line react/prop-types
 function LoginPage({ onLogin }) {
     const navigate = useNavigate();
 

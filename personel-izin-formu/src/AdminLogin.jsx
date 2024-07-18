@@ -137,10 +137,6 @@ function AdminLogin({onLogin}) {
 
             username: Yup.string()
 
-                .required('Username can not be empty')
-
-                .min(4, `Username should include a minimum of 4 characters.`),
-
             password: Yup.string()
 
                 .required('Password can not be empty')

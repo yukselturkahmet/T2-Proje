@@ -222,6 +222,7 @@ const LeaveForm = () => {
                 <h1>Staff Permit Form</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
+
                         <Label className={"required"}>Firstname:</Label>
                         <Input
                             type="text"
@@ -236,6 +237,7 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
+
                         <Label className={"required"}>Lastname:</Label>
                         <Input
                             type="text"
