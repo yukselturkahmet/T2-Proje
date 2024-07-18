@@ -1,11 +1,11 @@
 
 import React from 'react';
 
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 
 import * as Yup from 'yup';
 
@@ -117,7 +117,7 @@ const Error = styled.div`
 
 
 
-function AdminLogin({onLogin}) {
+function AdminLogin({ onLogin }) {
 
     const navigate = useNavigate();
 
@@ -134,17 +134,13 @@ function AdminLogin({onLogin}) {
         },
 
         validationSchema: Yup.object({
-
             username: Yup.string()
-
+                .required('Username can not be empty')
+                .min(3, `Username should include a minimum of 3 characters.`),
             password: Yup.string()
-
                 .required('Password can not be empty')
-
                 .min(6, 'Password should include a minimum of 6 characters.'),
-
         }),
-
         onSubmit: (values) => {
 
             // Simulate successful login
@@ -167,7 +163,7 @@ function AdminLogin({onLogin}) {
 
             <FormContainer>
 
-                <h1 style={{color: '#000000'}}>Admin Login</h1>
+                <h1 style={{ color: '#000000' }}>Admin Login</h1>
 
                 <form onSubmit={formik.handleSubmit}>
 
