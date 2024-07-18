@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
-import {useFormik} from 'formik';
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import logo from './assets/logo.jpg';
-
 
 const FormWrapper = styled.div`
     display: flex;
@@ -87,13 +86,13 @@ const Button = styled.button`
     margin-top: 20px;
 
     &:hover {
-        background-color: rgb(255, 165, 0);;
+        background-color: rgb(255, 165, 0);
     }
 `;
 
 const Error = styled.div`
     color: red;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 5px;
 `;
 
@@ -101,65 +100,78 @@ const Logo = styled.img`
     width: 100px;
     margin: 0 auto 20px;
     display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+`;
+
+const DebugInfo = styled.div`
+    display: none; /* Hides the debugging information */
 `;
 
 const LeaveForm = () => {
+    const [submitError, setSubmitError] = useState('');
+    const [submittedSuccessfully, setSubmittedSuccessfully] = useState(false);
+
     const formik = useFormik({
         initialValues: {
-            firstName: '',
+            firstname: '',
             lastname: '',
-            leaveType: '',
-            startDate: '',
-            endDate: '',
-            hour: '',
-            day: '',
+            leave_type: '',
+            start_date: '',
+            end_date: '',
+            leave_duration_hour: '',
+            leave_duration_day: '',
             reason: '',
         },
         validationSchema: Yup.object({
-            firstName: Yup.string()
-              .max(50, 'Can be maximum 50 characters.')
-              .required('This field cannot be left empty.')
-              .test(
-                'maxLength',
-                'Name field has reached the maximum length of 50 characters.',
-                value => value && value.length <= 25
-              ),
+            firstname: Yup.string()
+                .max(50, 'Can be maximum 50 characters.')
+                .required('This field cannot be left empty.')
+                .test('maxLength', 'Name field has reached the maximum length of 50 characters.', value => value && value.length <= 25),
             lastname: Yup.string()
-              .max(50, 'Can be maximum 50 characters.')
-              .required('This field cannot be left empty.'),
-            leaveType: Yup.string().required('Permit Type is required'),
-            startDate: Yup.date()
-              .required('Start date is required')
-              .transform((value, originalValue) => {
-                return originalValue ? new Date(originalValue) : value;
-              }),
-            endDate: Yup.date()
-              .required('End date is required')
-              .min(Yup.ref('startDate'), 'End date must be bigger than start date.')
-              .transform((value, originalValue) => {
-                return originalValue ? new Date(originalValue) : value;
-              }),
-            hour: Yup.number()
-              .min(1, 'It can min. 1 hour')
-              .required('Duration of permit is required.'),
-            day: Yup.number()
-              .min(1, 'It can min. 1 day')
-              .required('Duration of permit is required'),
+                .max(50, 'Can be maximum 50 characters.')
+                .required('This field cannot be left empty.'),
+            leave_type: Yup.string()
+                .required('Permit Type is required'),
+            start_date: Yup.date()
+                .nullable()
+                .transform((value, originalValue) => originalValue === "" ? null : value)
+                .required('Start date is required'),
+            end_date: Yup.date()
+                .nullable()
+                .transform((value, originalValue) => originalValue === "" ? null : value)
+                .required('End date is required')
+                .when('start_date', (start_date, schema) => {
+                    return start_date ? schema.min(start_date, 'End date must be after start date.') : schema;
+                }),
+            leave_duration_day: Yup.number()
+                .min(1, 'It can be min. 1 day').required('Duration of permit is required.')
+                .max(121, 'You have reached the maximum permit days.'),
+            leave_duration_hour: Yup.number()
+                .min(1, 'It can be min. 1 hour')
+                .required('Duration of the permit is required.'),
             reason: Yup.string()
-              .max(200, 'Can be maximum 200 characters.')
-              .required('Reason of permit is required.'),
-          }),
-      
-        
-        onSubmit: async (values) => {
-             const startDate = new Date(values.startDate);
-            const endDate = new Date(values.endDate);
-        
-            if (isNaN(startDate) || isNaN(endDate)) {
-                console.error("Invalid date");
+                .max(200, 'Can be maximum 200 characters.')
+                .required('Reason of permit is required.'),
+        }),
+
+        onSubmit: async (values, { setSubmitting }) => {
+            if (submittedSuccessfully) {
+                setSubmitError('Form has already been submitted.');
+                setSubmitting(false);
                 return;
             }
-        
+
+            const startDate = new Date(values.start_date);
+            const endDate = new Date(values.end_date);
+
+            if (isNaN(startDate) || isNaN(endDate)) {
+                console.error("Invalid date");
+                setSubmitError('Invalid date entered.');
+                setSubmitting(false);
+                return;
+            }
+
             const formattedStartDate = startDate.toISOString();
             const formattedEndDate = endDate.toISOString();
             try {
@@ -187,58 +199,59 @@ const LeaveForm = () => {
                             input: {
                                 start_date: formattedStartDate,
                                 end_date: formattedEndDate,
-                                leave_duration_day: values.day,
-                                leave_duration_hour: values.hour,
-                                leave_type: values.leaveType,
-                                firstname: values.firstName,
+                                leave_duration_day: values.leave_duration_day,
+                                leave_duration_hour: values.leave_duration_hour,
+                                leave_type: values.leave_type,
+                                firstname: values.firstname,
                                 lastname: values.lastname,
-                                reason: values.reason                           
+                                reason: values.reason
                             },
                         },
                     }),
                 });
-        
+
                 const data = await response.json();
-        
+
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
-                    // Handle GraphQL errors here, e.g., display error message to user
+                    setSubmitError('An error occurred while submitting the form.');
                 } else {
-                    
-                    console.log('User created successfully:', data.data.createUser);
+                    console.log('Form submitted successfully:', data.data.createEmployeeLeave);
+                    window.alert("You have successfully submitted your form.");
+                    setSubmittedSuccessfully(true); // Mark form as successfully submitted
+                    setSubmitError(''); // Clear any previous error message on successful submission
                 }
             } catch (error) {
                 console.error('Network Error:', error);
-                // Handle network errors here
+                setSubmitError('A network error occurred. Please try again later.');
+            } finally {
+                setSubmitting(false);
             }
         },
     });
-
 
     return (
         <FormWrapper className={"leave-form"}>
             <FormContainer>
                 <Logo src={logo} alt="Logo"/>
-                <h1>Staff Permit Form</h1>
+                <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
-
-                        <Label className={"required"}>Firstname:</Label>
+                        <Label className={"required"}>Name:</Label>
                         <Input
                             type="text"
-                            name="firstName"
+                            name="firstname"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.firstName}
+                            value={formik.values.firstname}
                             maxLength={25}
                         />
-                        {formik.touched.firstName && formik.errors.firstName ? (
-                            <Error>{formik.errors.firstName}</Error>
+                        {formik.touched.firstname && formik.errors.firstname ? (
+                            <Error>{formik.errors.firstname}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-
-                        <Label className={"required"}>Lastname:</Label>
+                        <Label className={"required"}>Surname:</Label>
                         <Input
                             type="text"
                             name="lastname"
@@ -252,80 +265,81 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label className={"required"}>Start Day:</Label>
+                        <Label className={"required"}>Start Date:</Label>
                         <DateInput
                             type="date"
-                            name="startDate"
+                            name="start_date"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.startDate}
+                            value={formik.values.start_date}
                         />
-                        {formik.touched.startDate && formik.errors.startDate ? (
-                            <Error>{formik.errors.startDate}</Error>
+                        {formik.touched.start_date && formik.errors.start_date ? (
+                            <Error>{formik.errors.start_date}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label className={"required"}>End Date:</Label>
                         <DateInput
                             type="date"
-                            name="endDate"
+                            name="end_date"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.endDate}
+                            value={formik.values.end_date}
                         />
-                        {formik.touched.endDate && formik.errors.endDate ? (
-                            <Error>{formik.errors.endDate}</Error>
+                        {formik.touched.end_date && formik.errors.end_date ? (
+                            <Error>{formik.errors.end_date}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label className={"required"}>Permit Type:</Label>
                         <Select
-                            name="leaveType"
+                            name="leave_type"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.leaveType}
+                            value={formik.values.leave_type}
                         >
-                            <option value="" label="Seçiniz"/>
+                            <option value="" label="Select"/>
                             <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/> 
-                            <option value="Casual Leave " label="Casual Leave"/>
+                            <option value="Offset Permit" label="Offset Permit"/>
+                            <option value="Casual Leave" label="Casual Leave"/>
                             <option value="Unpaid Vacation" label="Unpaid Vacation"/>
                             <option value="Sick Leave" label="Sick Leave"/>
                             <option value="After Birth Permit" label="After Birth Permit"/>
                             <option value="Death Permit" label="Death Permit"/>
                             <option value="Marriage Permit" label="Marriage Permit"/>
                         </Select>
-                        {formik.touched.leaveType && formik.errors.leaveType ? (
-                            <Error>{formik.errors.leaveType}</Error>
+                        {formik.touched.leave_type && formik.errors.leave_type ? (
+                            <Error>{formik.errors.leave_type}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label>Permit Duration (hour):</Label>
                         <Input
                             type="number"
-                            name="hour"
+                            name="leave_duration_hour"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.hour}
+                            value={formik.values.leave_duration_hour}
                         />
-                        {formik.touched.hour && formik.errors.hour ? (
-                            <Error>{formik.errors.hour}</Error>
+                        {formik.touched.leave_duration_hour && formik.errors.leave_duration_hour ? (
+                            <Error>{formik.errors.leave_duration_hour}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label className={"required"}>Permit Duration (Day):</Label>
                         <Input
                             type="number"
-                            name="day"
+                            name="leave_duration_day"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.day}
+                            value={formik.values.leave_duration_day}
+                            maxLength={122}
                         />
-                        {formik.touched.day && formik.errors.day ? (
-                            <Error>{formik.errors.day}</Error>
+                        {formik.touched.leave_duration_day && formik.errors.leave_duration_day ? (
+                            <Error>{formik.errors.leave_duration_day}</Error>
                         ) : null}
                     </FormGroup>
-                    <FormGroup style={{width: '100%'}}>
+                    <FormGroup style={{ width: '100%' }}>
                         <Label className={"required"}>Permit Reason:</Label>
                         <Textarea
                             name="reason"
@@ -337,8 +351,17 @@ const LeaveForm = () => {
                             <Error>{formik.errors.reason}</Error>
                         ) : null}
                     </FormGroup>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" disabled={formik.isSubmitting}>
+                        {formik.isSubmitting ? 'Submitting...' : 'Submit'}
+                    </Button>
+                    {submitError && <Error className={"error_same_value"}>{submitError}</Error>}
                 </Form>
+                <DebugInfo>
+                    <h3>Debugging Information</h3>
+                    <p>isValid: {formik.isValid.toString()}</p>
+                    <p>isSubmitting: {formik.isSubmitting.toString()}</p>
+                    <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
+                </DebugInfo>
             </FormContainer>
         </FormWrapper>
     );
