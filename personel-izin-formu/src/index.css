@@ -12,6 +12,10 @@
     width: 100%;
 }
 
+.error_same_value{
+    font-weight: bold;
+}
+
 .login-page {
     margin: auto;
 }
@@ -77,12 +81,10 @@ button {
     background-color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.25s;
-    color: #fff;
 }
 
 button:hover {
     border-color: #646cff;
-
 }
 
 button:focus,
