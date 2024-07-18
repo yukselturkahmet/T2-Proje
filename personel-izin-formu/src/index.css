@@ -1,6 +1,11 @@
-.required::after{
+.required::after {
     content: "*";
     color: red;
+}
+
+.staff_form_txt {
+    color: #28282B;
+    font-weight: 800;
 }
 
 .leave-form {
@@ -72,10 +77,12 @@ button {
     background-color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.25s;
+    color: #fff;
 }
 
 button:hover {
     border-color: #646cff;
+
 }
 
 button:focus,
@@ -83,17 +90,3 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
-
-    a:hover {
-        color: #747bff;
-    }
-
-    button {
-        background-color: #f9f9f9;
-    }
-}

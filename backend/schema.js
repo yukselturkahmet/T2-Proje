@@ -8,7 +8,8 @@ export const typeDefs = gql`
     leave_duration_day: Int
     leave_duration_hour: Int
     leave_type: String
-    name_surname: String
+    firstname: String
+    lastname: String
     reason: String
   }
 
@@ -37,7 +38,18 @@ export const typeDefs = gql`
     leave_duration_day: Int!
     leave_duration_hour: Int!
     leave_type: String!
-    name_surname: String!
+    firstname: String!
+    lastname: String!
     reason: String!
+  }
+
+  input CreateUserInput {
+    username: String!
+    pword: String!
+  }
+
+  type Mutation {
+    createEmployeeLeave(input: CreateEmployeeLeaveInput!): Employee
+    createUser(input: CreateUserInput!): User
   }
 `;

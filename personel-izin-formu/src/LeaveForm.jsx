@@ -107,39 +107,113 @@ const LeaveForm = () => {
     const formik = useFormik({
         initialValues: {
             firstName: '',
-            surName: '',
+            lastname: '',
             leaveType: '',
             startDate: '',
             endDate: '',
-            saat: '',
+            hour: '',
             day: '',
             reason: '',
         },
         validationSchema: Yup.object({
             firstName: Yup.string()
-                .max(50, 'En fazla 50 karakter olabilir')
-                .required('This field cannot be left empty.')
-                .test('maxLength', 'Name field has reached the maximum length of 50 characters.', value => value && value.length <= 25),
-            surName: Yup.string()
-                .max(50, 'En fazla 50 karakter olabilir')
-                .required('This field cannot be left empty.'),
-            leaveType: Yup.string()
-                .required('İzin türü zorunludur'),
+              .max(50, 'Can be maximum 50 characters.')
+              .required('This field cannot be left empty.')
+              .test(
+                'maxLength',
+                'Name field has reached the maximum length of 50 characters.',
+                value => value && value.length <= 25
+              ),
+            lastname: Yup.string()
+              .max(50, 'Can be maximum 50 characters.')
+              .required('This field cannot be left empty.'),
+            leaveType: Yup.string().required('Permit Type is required'),
             startDate: Yup.date()
-                .required('Başlangıç tarihi zorunludur'),
-            endDate: Yup.date().required('Bitiş tarihi zorunludur')
-                .when('startDate', (startDate, schema) => {
-                    return schema.min(startDate, 'Bitiş tarihi, Başlangıç tarihinden büyük olmalıdır');
-                }),
-            duration: Yup.number().min(1, 'En az 1 gün olmalı').required('İzin süresi zorunludur'),
+              .required('Start date is required')
+              .transform((value, originalValue) => {
+                return originalValue ? new Date(originalValue) : value;
+              }),
+            endDate: Yup.date()
+              .required('End date is required')
+              .min(Yup.ref('startDate'), 'End date must be bigger than start date.')
+              .transform((value, originalValue) => {
+                return originalValue ? new Date(originalValue) : value;
+              }),
+            hour: Yup.number()
+              .min(1, 'It can min. 1 hour')
+              .required('Duration of permit is required.'),
+            day: Yup.number()
+              .min(1, 'It can min. 1 day')
+              .required('Duration of permit is required'),
             reason: Yup.string()
-                .max(200, 'Can be maximum 200 characters.')
-                .required('İzin gerekçesi zorunludur'),
-        }),
-        onSubmit: (values) => {
-            console.log(values);
+              .max(200, 'Can be maximum 200 characters.')
+              .required('Reason of permit is required.'),
+          }),
+      
+        
+        onSubmit: async (values) => {
+             const startDate = new Date(values.startDate);
+            const endDate = new Date(values.endDate);
+        
+            if (isNaN(startDate) || isNaN(endDate)) {
+                console.error("Invalid date");
+                return;
+            }
+        
+            const formattedStartDate = startDate.toISOString();
+            const formattedEndDate = endDate.toISOString();
+            try {
+                const response = await fetch('http://localhost:4000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: `
+                            mutation createEmployeeLeave($input: CreateEmployeeLeaveInput!) {
+                                createEmployeeLeave(input: $input) {
+                                    start_date
+                                    end_date
+                                    leave_duration_day
+                                    leave_duration_hour
+                                    leave_type
+                                    firstname
+                                    lastname
+                                    reason
+                                }
+                            }
+                        `,
+                        variables: {
+                            input: {
+                                start_date: formattedStartDate,
+                                end_date: formattedEndDate,
+                                leave_duration_day: values.day,
+                                leave_duration_hour: values.hour,
+                                leave_type: values.leaveType,
+                                firstname: values.firstName,
+                                lastname: values.lastname,
+                                reason: values.reason                           
+                            },
+                        },
+                    }),
+                });
+        
+                const data = await response.json();
+        
+                if (data.errors) {
+                    console.error('GraphQL Error:', data.errors);
+                    // Handle GraphQL errors here, e.g., display error message to user
+                } else {
+                    
+                    console.log('User created successfully:', data.data.createUser);
+                }
+            } catch (error) {
+                console.error('Network Error:', error);
+                // Handle network errors here
+            }
         },
     });
+
 
     return (
         <FormWrapper className={"leave-form"}>
@@ -148,7 +222,8 @@ const LeaveForm = () => {
                 <h1>Staff Permit Form</h1>
                 <Form onSubmit={formik.handleSubmit}>
                     <FormGroup>
-                        <Label className={"required"}>Name:</Label>
+
+                        <Label className={"required"}>Firstname:</Label>
                         <Input
                             type="text"
                             name="firstName"
@@ -162,17 +237,18 @@ const LeaveForm = () => {
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label className={"required"}>Surname:</Label>
+
+                        <Label className={"required"}>Lastname:</Label>
                         <Input
                             type="text"
-                            name="surName"
+                            name="lastname"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.surName}
+                            value={formik.values.lastname}
                             maxLength={50}
                         />
-                        {formik.touched.surName && formik.errors.surName ? (
-                            <Error>{formik.errors.surName}</Error>
+                        {formik.touched.lastname && formik.errors.lastname ? (
+                            <Error>{formik.errors.lastname}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
@@ -211,7 +287,7 @@ const LeaveForm = () => {
                         >
                             <option value="" label="Seçiniz"/>
                             <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/> --Mahsup izin ingilizceye cevirirken offset oldugundan emin degilim.
+                            <option value="Offset Permit" label="Offset Permit"/> 
                             <option value="Casual Leave " label="Casual Leave"/>
                             <option value="Unpaid Vacation" label="Unpaid Vacation"/>
                             <option value="Sick Leave" label="Sick Leave"/>
@@ -227,20 +303,20 @@ const LeaveForm = () => {
                         <Label>Permit Duration (hour):</Label>
                         <Input
                             type="number"
-                            name="saat"
+                            name="hour"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.saat}
+                            value={formik.values.hour}
                         />
-                        {formik.touched.saat && formik.errors.saat ? (
-                            <Error>{formik.errors.saat}</Error>
+                        {formik.touched.hour && formik.errors.hour ? (
+                            <Error>{formik.errors.hour}</Error>
                         ) : null}
                     </FormGroup>
                     <FormGroup>
                         <Label className={"required"}>Permit Duration (Day):</Label>
                         <Input
                             type="number"
-                            name="gun"
+                            name="day"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.day}
