@@ -57,7 +57,7 @@ const Error = styled.div`
     font-size: 1.2em;
 `;
 
-function AdminLogin({ onLogin }) {
+function AdminLogin() {
 
     const navigate = useNavigate();
 
@@ -77,8 +77,8 @@ function AdminLogin({ onLogin }) {
         onSubmit: (values) => {
             // Simulate successful login
 
-            onLogin();
-            navigate('/leave-form');
+
+            navigate('/admin-page');
 
             console.log(values);
             console.log('Successful Login');
