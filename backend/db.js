@@ -1,9 +1,9 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
 // Initialize Sequelize to connect to your MySQL database
-const sequelize = new Sequelize('postgres', 'postgres', 'mysecretpassword', {
+const sequelize = new Sequelize('t2_database', 'root', 'password', {
   host: 'localhost',
-  dialect: 'postgres',
+  dialect: 'mysql',
 
 });
 

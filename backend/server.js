@@ -13,10 +13,18 @@ const resolvers = {
     async getUsers() {
       return await User.findAll();
     },
+    async getEmployeeByName(_, { firstname, lastname }) {
+      return await Employee.findOne({
+        where: {
+          firstname,
+          lastname
+        }
+      });
+    }
   },
   Mutation: {
     async createEmployeeLeave(_, { input }) {
-      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname,lastname, reason } = input;
+      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason } = input;
       const newEmployeeLeave = await Employee.create({
         start_date,
         end_date,
@@ -32,12 +40,25 @@ const resolvers = {
     async createUser(_, { input }) {
       const { username, pword } = input;
       const newUser = await User.create({
-        
         username,
         pword
       });
       return newUser;
     }
+  },
+  Employee: {
+    user: async (parent) => {
+      return await User.findOne({
+        where: { employee_id: parent.employee_id }
+      });
+    },
+  },
+  User: {
+    employee: async (parent) => {
+      return await Employee.findOne({
+        where: { employee_id: parent.employee_id }
+      });
+    },
   }
 };
 
