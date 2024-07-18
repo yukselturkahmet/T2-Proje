@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -132,7 +133,6 @@ const Error = styled.div`
     margin-top: 5px;
 `;
 
-// eslint-disable-next-line react/prop-types
 function LoginPage({ onLogin }) {
     const navigate = useNavigate();
 
@@ -153,8 +153,6 @@ function LoginPage({ onLogin }) {
                 .max(25, 'Password cannot exceed 25 characters.')
                 .test('maxLength', 'Password has reached the maximum length of 25 characters.', value => value && value.length <= 25),
         }),
-        
-
         onSubmit: async (values) => {
             try {
                 const response = await fetch('http://localhost:4000/graphql', {
@@ -180,9 +178,9 @@ function LoginPage({ onLogin }) {
                         },
                     }),
                 });
-        
+
                 const data = await response.json();
-        
+
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
                     // Handle GraphQL errors here, e.g., display error message to user
@@ -196,7 +194,6 @@ function LoginPage({ onLogin }) {
                 // Handle network errors here
             }
         },
-        
     });
 
     const handleAdminLogin = () => {
@@ -210,7 +207,7 @@ function LoginPage({ onLogin }) {
                 <Title>Log In</Title>
                 <form onSubmit={formik.handleSubmit}>
                     <InputBoxContainer>
-                        <InputBox >
+                        <InputBox>
                             <Input
                                 type="text"
                                 name="username"
@@ -220,7 +217,7 @@ function LoginPage({ onLogin }) {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.username}
                             />
-                            <InputLabel htmlFor="username" >Username</InputLabel>
+                            <InputLabel htmlFor="username">Username</InputLabel>
                             <Icon icon={faUser} />
                         </InputBox>
                         {formik.touched.username && formik.errors.username ? (
