@@ -95,7 +95,7 @@ const Button = styled.button`
     justify-content: center;
     border-radius: 50px;
     width: 100%;
-    height: 38px;
+    height: 55px;
     font-size: 1.6em;
     font-weight: 700;
     cursor: pointer;
@@ -137,6 +137,7 @@ const Error = styled.div`
     margin-top: 5px;
 `;
 
+// eslint-disable-next-line react/prop-types
 function LoginPage({ onLogin }) {
 
 
@@ -178,7 +179,7 @@ function LoginPage({ onLogin }) {
                 <Title>Log In</Title>
                 <form onSubmit={formik.handleSubmit}>
                     <InputBoxContainer>
-                        <InputBox>
+                        <InputBox >
                             <Input
                                 type="text"
                                 name="username"
@@ -188,7 +189,7 @@ function LoginPage({ onLogin }) {
                                 onBlur={formik.handleBlur}
                                 value={formik.values.username}
                             />
-                            <InputLabel htmlFor="username">Username</InputLabel>
+                            <InputLabel htmlFor="username" >Username</InputLabel>
                             <Icon icon={faUser} />
                         </InputBox>
                         {formik.touched.username && formik.errors.username ? (
