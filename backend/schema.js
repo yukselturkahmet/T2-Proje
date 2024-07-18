@@ -11,6 +11,8 @@ export const typeDefs = gql`
     firstname: String
     lastname: String
     reason: String
+    user: User # Adding the relationship field
+
   }
 
   type Admin {
@@ -24,12 +26,15 @@ export const typeDefs = gql`
     employee_id: ID!
     username: String
     pword: String
+    employee: Employee # Adding the relationship field
+
   }
 
   type Query {
     getEmployees: [Employee]
     getAdmins: [Admin]
     getUsers: [User]
+    getEmployeeByName(firstname: String!, lastname: String!): Employee
   }
 
   input CreateEmployeeLeaveInput {
