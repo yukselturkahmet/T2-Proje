@@ -4,6 +4,7 @@ import LeaveForm from './LeaveForm';
 import LoginPage from './LoginPage';
 import AdminLogin from './AdminLogin';
 import styled from 'styled-components';
+import LeaveFormList from './LeaveFormList';
 import AdminPage from "./AdminPage"
 
 const AppWrapper = styled.div`
@@ -24,6 +25,10 @@ function App() {
       <AppWrapper>
         <Routes>
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/leave-form-list"
+            element={isLoggedIn ? <LeaveFormList /> : <Navigate to="/login" />}
+          />
           <Route
             path="/leave-form"
             element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}

@@ -186,7 +186,7 @@ function LoginPage({ onLogin }) {
                     // Handle GraphQL errors here, e.g., display error message to user
                 } else {
                     onLogin();
-                    navigate('/leave-form');
+                    navigate('/leave-form-list');
                     console.log('User created successfully:', data.data.createUser);
                 }
             } catch (error) {
