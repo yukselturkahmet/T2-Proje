@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -162,8 +161,8 @@ function LoginPage({ onLogin }) {
                     },
                     body: JSON.stringify({
                         query: `
-                            mutation CreateUser($input: CreateUserInput!) {
-                                createUser(input: $input) {
+                            query authenticateUser($username: String!, $pword: String!) {
+                                authenticateUser(username: $username, pword: $pword) {
                                     employee_id
                                     username
                                     pword
@@ -171,10 +170,8 @@ function LoginPage({ onLogin }) {
                             }
                         `,
                         variables: {
-                            input: {
-                                username: values.username,
-                                pword: values.password,
-                            },
+                            username: values.username,
+                            pword: values.password,
                         },
                     }),
                 });
@@ -183,17 +180,28 @@ function LoginPage({ onLogin }) {
 
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
-                    // Handle GraphQL errors here, e.g., display error message to user
+                    
                 } else {
-                    onLogin();
-                    navigate('/leave-form-list');
-                    console.log('User created successfully:', data.data.createUser);
+
+                    console.log(data);
+
+                    if (data.data.authenticateUser) {
+                        
+                        onLogin(); 
+                
+                        navigate('/leave-form-list');
+                    } else {
+                
+                        formik.setFieldError('password', 'Invalid username or password.');
+                    }
+
                 }
             } catch (error) {
                 console.error('Network Error:', error);
-                // Handle network errors here
+
             }
         },
+
     });
 
     const handleAdminLogin = () => {

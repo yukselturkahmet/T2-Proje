@@ -4,6 +4,22 @@ import { sequelize, Employee, Admin, User } from './db.js';
 
 const resolvers = {
   Query: {
+    async authenticateUser(_, {username, pword}) {
+      return await User.findOne({
+        where: {
+          username,
+          pword
+        }
+      });
+    },
+    async authenticateAdmin(_, {username, password_}) {
+      return await Admin.findOne({
+        where: {
+          username,
+          password_
+        }
+      });
+    },
     async getEmployees() {
       return await Employee.findAll();
     },
@@ -20,9 +36,11 @@ const resolvers = {
           lastname
         }
       });
-    }
+   
+        }
   },
   Mutation: {
+    
     async createEmployeeLeave(_, { input }) {
       const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason } = input;
       const newEmployeeLeave = await Employee.create({

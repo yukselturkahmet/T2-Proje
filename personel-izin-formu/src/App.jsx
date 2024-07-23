@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import LeaveForm from './LeaveForm';
 import LoginPage from './LoginPage';
 import AdminLogin from './AdminLogin';
+import LeaveFormList from './LeaveFormList';
 import styled from 'styled-components';
 import LeaveFormList from './LeaveFormList';
 import AdminPage from "./AdminPage"
+
 
 const AppWrapper = styled.div`
   font-family: 'Arial', sans-serif;
