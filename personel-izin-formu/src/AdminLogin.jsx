@@ -95,6 +95,7 @@ function AdminLogin() {
                         `,
                         variables: {
                             username: values.username,
+                            
                             password_: values.password,
                         },
                     }),
@@ -108,11 +109,15 @@ function AdminLogin() {
                 } else {
                     console.log(data);
         
-                    if (data.data.authenticateUser) {
-                        console.log('Login successful');
-                        navigate('/admin-page');
+                        if (data.data.authenticateAdmin) {
+
+                            console.log('Login successful');
+                            navigate('/admin-page');
+
                     } else {
                         // Login failed
+                        console.log(values.username);
+                        console.log(values.password);
                         formik.setFieldError('password', 'Invalid username or password.');
                     }
                 }
