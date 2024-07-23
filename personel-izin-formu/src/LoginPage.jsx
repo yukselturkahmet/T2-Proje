@@ -175,20 +175,20 @@ function LoginPage({ onLogin }) {
                         },
                     }),
                 });
-        
+
                 const data = await response.json();
-        
+
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
                     // Handle GraphQL errors here, e.g., display error message to user
                 } else {
                     console.log(data);
-        
+
                     if (data.data.authenticateUser) {
                         // Login successful
                         onLogin(); // Example function to handle successful login
                         // Redirect to dashboard or another page
-                        navigate('/leave-form');
+                        navigate('/leave-form-list');
                     } else {
                         // Login failed
                         formik.setFieldError('password', 'Invalid username or password.');
@@ -199,7 +199,7 @@ function LoginPage({ onLogin }) {
                 // Handle network errors here
             }
         },
-        
+
     });
 
     const handleAdminLogin = () => {

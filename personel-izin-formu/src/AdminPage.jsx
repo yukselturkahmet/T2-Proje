@@ -7,15 +7,16 @@ const AdminPageWrapper = styled.div`
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #f0f0f0;
+  background: linear-gradient(45deg, #144FC4, #48BB27);
+  font-family: 'Roboto', sans-serif;
 `;
 
 const AdminContent = styled.div`
   background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
   width: 100%;
 `;
 
@@ -26,18 +27,51 @@ const UserInfo = styled.div`
 const Label = styled.span`
   font-weight: bold;
   margin-right: 10px;
-  color: #000000;
+  color: #333;
 `;
 
 const Info = styled.span`
-  color: #333333;
+  color: #555;
 `;
 
 const Input = styled.input`
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 12px;
+  width: calc(100% - 24px);
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const ErrorText = styled.div`
+  margin-top: 20px;
+  color: #d9534f;
+`;
+
+const NoUserText = styled.div`
+  margin-top: 20px;
+  color: #f0ad4e;
+`;
+
+const EmployeeDataContainer = styled.div`
+  margin-top: 20px;
 `;
 
 const AdminPage = () => {
@@ -48,7 +82,6 @@ const AdminPage = () => {
   const [noUserFound, setNoUserFound] = useState(false);
 
   const handleClick = async () => {
-    console.log('Button clicked!');
     try {
       const response = await fetch('http://localhost:4000/graphql', {
         method: 'POST',
@@ -81,7 +114,6 @@ const AdminPage = () => {
       const data = await response.json();
 
       if (data.errors) {
-        console.error('GraphQL Error:', data.errors);
         setError(data.errors);
         setEmployeeData(null);
         setNoUserFound(false);
@@ -95,7 +127,6 @@ const AdminPage = () => {
         setNoUserFound(false);
       }
     } catch (error) {
-      console.error('Network Error:', error);
       setError(error);
       setEmployeeData(null);
       setNoUserFound(false);
@@ -119,9 +150,9 @@ const AdminPage = () => {
             onChange={(e) => setLastname(e.target.value)}
           />
         </UserInfo>
-        <button style={{color:'white'}} onClick={handleClick}>Get Employee Info</button>
+        <Button onClick={handleClick}>Get Employee Info</Button>
         {employeeData && (
-          <div>
+          <EmployeeDataContainer>
             <h3>Employee Information:</h3>
             <p><Label>ID:</Label> <Info>{employeeData.employee_id}</Info></p>
             <p><Label>Start Date:</Label> <Info>{employeeData.start_date}</Info></p>
@@ -132,18 +163,13 @@ const AdminPage = () => {
             <p><Label>First Name:</Label> <Info>{employeeData.firstname}</Info></p>
             <p><Label>Last Name:</Label> <Info>{employeeData.lastname}</Info></p>
             <p><Label>Reason:</Label> <Info>{employeeData.reason}</Info></p>
-          </div>
+          </EmployeeDataContainer>
         )}
         {noUserFound && (
-          <div>
-            <h3 style={{color:'black'}}>No user found with the given name.</h3>
-          </div>
+          <NoUserText>No user found with the given name.</NoUserText>
         )}
         {error && (
-          <div>
-            <h3>Error:</h3>
-            <pre>{JSON.stringify(error, null, 2)}</pre>
-          </div>
+          <ErrorText>Error: {JSON.stringify(error, null, 2)}</ErrorText>
         )}
       </AdminContent>
     </AdminPageWrapper>
