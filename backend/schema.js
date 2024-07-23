@@ -12,7 +12,6 @@ export const typeDefs = gql`
     lastname: String
     reason: String
     user: User # Adding the relationship field
-
   }
 
   type Admin {
@@ -27,7 +26,6 @@ export const typeDefs = gql`
     username: String
     pword: String
     employee: Employee # Adding the relationship field
-
   }
 
   type Query {
@@ -35,6 +33,8 @@ export const typeDefs = gql`
     getAdmins: [Admin]
     getUsers: [User]
     getEmployeeByName(firstname: String!, lastname: String!): Employee
+    authenticateUser(username: String!, pword: String!): User #  
+    authenticateAdmin(username: String!, password_: String!): Admin
   }
 
   input CreateEmployeeLeaveInput {

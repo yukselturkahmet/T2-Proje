@@ -74,14 +74,52 @@ function AdminLogin() {
                 .required('Password can not be empty')
                 .min(6, 'Password should include a minimum of 6 characters.'),
         }),
-        onSubmit: (values) => {
-            // Simulate successful login
+        onSubmit: async (values) => {
+            
 
 
-            navigate('/admin-page');
-
-            console.log(values);
-            console.log('Successful Login');
+            try {
+                const response = await fetch('http://localhost:4000/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: `
+                            query authenticateAdmin($username: String!, $password_: String!) {
+                                authenticateAdmin(username: $username, password_: $password_) {
+                                    username
+                                    password_
+                                }
+                            }
+                        `,
+                        variables: {
+                            username: values.username,
+                            password_: values.password,
+                        },
+                    }),
+                });
+        
+                const data = await response.json();
+        
+                if (data.errors) {
+                    console.error('GraphQL Error:', data.errors);
+                    // Handle GraphQL errors here, e.g., display error message to user
+                } else {
+                    console.log(data);
+        
+                    if (data.data.authenticateUser) {
+                        console.log('Login successful');
+                        navigate('/admin-page');
+                    } else {
+                        // Login failed
+                        formik.setFieldError('password', 'Invalid username or password.');
+                    }
+                }
+            } catch (error) {
+                console.error('Network Error:', error);
+                // Handle network errors here
+            }
         },
     });
 
