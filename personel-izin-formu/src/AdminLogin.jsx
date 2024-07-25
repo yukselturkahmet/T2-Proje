@@ -86,17 +86,17 @@ function AdminLogin() {
                     },
                     body: JSON.stringify({
                         query: `
-                            query authenticateAdmin($username: String!, $pword: String!) {
-                                authenticateAdmin(username: $username, pword: $pword) {
+                            query authenticateAdmin($username: String!, $password_: String!) {
+                                authenticateAdmin(username: $username, password_: $password_) {
                                     username
-                                    pword
+                                    password_
                                 }
                             }
                         `,
                         variables: {
                             username: values.username,
 
-                            pword: values.password,
+                            password_: values.password,
                         },
                     }),
                 });
@@ -131,7 +131,7 @@ function AdminLogin() {
     return (
         <FormWrapper>
             <FormContainer>
-                <h1 style={{ color: '#F9F6EE' }}>Admin Login</h1>
+                <h1 style={{ color: '#ffffff' }}>Admin Login</h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div>
                         <Input

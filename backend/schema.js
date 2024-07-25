@@ -18,7 +18,7 @@ export const typeDefs = gql`
     admin_id: ID!
     employee_id: Int
     username: String
-    pword: String
+    password_: String
   }
 
   type User {
