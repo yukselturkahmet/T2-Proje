@@ -259,7 +259,7 @@ const LeaveForm = () => {
     return (
         <FormWrapper className={"leave-form"}>
             <FormContainer>
-                <Logo src={logo} alt="Logo"/>
+                <Logo src={logo} alt="Logo" />
                 <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
                 <Form onSubmit={validateAndSubmit}>
                     <FormGroup>
@@ -324,15 +324,15 @@ const LeaveForm = () => {
                             onBlur={formik.handleBlur}
                             value={formik.values.leave_type}
                         >
-                            <option value="" label="Select"/>
-                            <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/>
-                            <option value="Casual Leave" label="Casual Leave"/>
-                            <option value="Unpaid Vacation" label="Unpaid Vacation"/>
-                            <option value="Sick Leave" label="Sick Leave"/>
-                            <option value="After Birth Permit" label="After Birth Permit"/>
-                            <option value="Death Permit" label="Death Permit"/>
-                            <option value="Marriage Permit" label="Marriage Permit"/>
+                            <option value="" label="Select" />
+                            <option value="Annual Leave" label="Annual Leave" />
+                            <option value="Offset Permit" label="Offset Permit" />
+                            <option value="Casual Leave" label="Casual Leave" />
+                            <option value="Unpaid Vacation" label="Unpaid Vacation" />
+                            <option value="Sick Leave" label="Sick Leave" />
+                            <option value="After Birth Permit" label="After Birth Permit" />
+                            <option value="Death Permit" label="Death Permit" />
+                            <option value="Marriage Permit" label="Marriage Permit" />
                         </Select>
                         {formik.touched.leave_type && formik.errors.leave_type ? (
                             <Error>{formik.errors.leave_type}</Error>

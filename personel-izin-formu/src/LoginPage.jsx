@@ -180,23 +180,25 @@ function LoginPage({ onLogin }) {
 
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
-                    // Handle GraphQL errors here, e.g., display error message to user
+                    
                 } else {
+
                     console.log(data);
 
                     if (data.data.authenticateUser) {
-                        // Login successful
-                        onLogin(); // Example function to handle successful login
-                        // Redirect to dashboard or another page
+                        
+                        onLogin(); 
+                
                         navigate('/leave-form-list');
                     } else {
-                        // Login failed
+                
                         formik.setFieldError('password', 'Invalid username or password.');
                     }
+
                 }
             } catch (error) {
                 console.error('Network Error:', error);
-                // Handle network errors here
+
             }
         },
 
