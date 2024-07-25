@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import logo from './assets/logo.jpg';
 
 const FormWrapper = styled.div`
@@ -119,6 +120,7 @@ const DebugInfo = styled.div`
 const LeaveForm = () => {
     const [submitError, setSubmitError] = useState('');
     const [submittedSuccessfully, setSubmittedSuccessfully] = useState(false);
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -230,6 +232,7 @@ const LeaveForm = () => {
                     window.alert("You have successfully submitted your form.");
                     setSubmittedSuccessfully(true); // Mark form as successfully submitted
                     setSubmitError(''); // Clear any previous error message on successful submission
+                    navigate('/leave-form-list'); // Navigate to the LeaveFormList page
                 }
             } catch (error) {
                 console.error('Network Error:', error);
