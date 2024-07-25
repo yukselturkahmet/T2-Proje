@@ -52,7 +52,8 @@ const Pagination = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-
+    margin-bottom: 60px; /* Alt boşluk ekleyerek konumu yukarı taşı */
+    
     & > button {
         margin: 0 5px;
         padding: 5px 10px;
@@ -74,10 +75,11 @@ const Pagination = styled.div`
     }
 `;
 
+
 const LeaveFormList = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(10); 
+    const [totalPages, setTotalPages] = useState(10);
     const [data, setData] = useState([]);
 
     useEffect(() => {

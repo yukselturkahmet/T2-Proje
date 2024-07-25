@@ -21,7 +21,7 @@ const FormContainer = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    height: 100%;
+    height: 90%;
     text-align: center;
 `;
 
@@ -54,7 +54,10 @@ const Input = styled.input`
 `;
 
 const DateInput = styled(Input)`
-    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Select = styled.select`
