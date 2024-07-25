@@ -4,6 +4,27 @@ import { sequelize, Employee, Admin, User } from './db.js';
 
 const resolvers = {
   Query: {
+    getEmployeesByUsername: async (_, { username }) => {
+      try {
+        const users = await User.findAll({
+          where: { username },
+          include: [{
+            model: Employee,
+            as: 'employee' // The alias used in the association
+          }]
+        });
+
+        if (!users.length) {
+          throw new Error('No employees found');
+        }
+
+        return users;
+      } catch (error) {
+        console.error('Error fetching employees:', error.message);
+        throw new Error('Failed to fetch employees');
+      }
+    },
+
     async authenticateUser(_, {username, pword}) {
       return await User.findOne({
         where: {
@@ -29,8 +50,8 @@ const resolvers = {
     async getUsers() {
       return await User.findAll();
     },
-    async getEmployeeByName(_, { firstname, lastname }) {
-      return await Employee.findOne({
+    async getEmployeesByName(_, { firstname, lastname }) {
+      return await Employee.findAll({
         where: {
           firstname,
           lastname
@@ -42,7 +63,7 @@ const resolvers = {
   Mutation: {
     
     async createEmployeeLeave(_, { input }) {
-      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason } = input;
+      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason ,is_checked} = input;
       const newEmployeeLeave = await Employee.create({
         start_date,
         end_date,
@@ -51,7 +72,8 @@ const resolvers = {
         leave_type,
         firstname,
         lastname,
-        reason
+        reason,
+        is_checked
       });
       return newEmployeeLeave;
     },

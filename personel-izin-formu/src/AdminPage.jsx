@@ -12,10 +12,10 @@ const AdminPageWrapper = styled.div`
 
 const AdminContent = styled.div`
   background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
   width: 100%;
 `;
 
@@ -26,24 +26,95 @@ const UserInfo = styled.div`
 const Label = styled.span`
   font-weight: bold;
   margin-right: 10px;
-  color: #000000;
+  color: #333;
 `;
 
 const Info = styled.span`
-  color: #333333;
+  color: #555;
 `;
 
 const Input = styled.input`
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+
+  margin: 10px 0;
+
+  padding: 12px;
+
+  width: calc(100% - 24px);
+
+  border-radius: 6px;
+
+  border: 1px solid #ddd;
+
+  font-size: 16px;
+
+`;
+
+
+
+const Button = styled.button`
+
+  display: inline-block;
+
+  margin-top: 20px;
+
+  padding: 10px 20px;
+
+  background-color: #007BFF;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: background-color 0.3s;
+
+
+
+  &:hover {
+
+    background-color: #0056b3;
+
+  }
+
+`;
+
+
+
+const ErrorText = styled.div`
+
+  margin-top: 20px;
+
+  color: #d9534f;
+
+`;
+
+
+
+const NoUserText = styled.div`
+
+  margin-top: 20px;
+
+  color: #f0ad4e;
+
+`;
+
+
+
+const EmployeeDataContainer = styled.div`
+
+  margin-top: 20px;
+
 `;
 
 const AdminPage = () => {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
-  const [employeeData, setEmployeeData] = useState(null);
+  const [employeeData, setEmployeeData] = useState([]);
   const [error, setError] = useState(null);
   const [noUserFound, setNoUserFound] = useState(false);
 
@@ -57,8 +128,8 @@ const AdminPage = () => {
         },
         body: JSON.stringify({
           query: `
-            query GetEmployeeByName($firstname: String!, $lastname: String!) {
-              getEmployeeByName(firstname: $firstname, lastname: $lastname) {
+            query GetEmployeesByName($firstname: String!, $lastname: String!) {
+              getEmployeesByName(firstname: $firstname, lastname: $lastname) {
                 employee_id
                 start_date
                 end_date
@@ -67,7 +138,8 @@ const AdminPage = () => {
                 leave_type
                 firstname
                 lastname
-                reason  
+                reason
+                is_checked
               }
             }
           `,
@@ -83,21 +155,21 @@ const AdminPage = () => {
       if (data.errors) {
         console.error('GraphQL Error:', data.errors);
         setError(data.errors);
-        setEmployeeData(null);
+        setEmployeeData([]);
         setNoUserFound(false);
-      } else if (data.data.getEmployeeByName === null) {
+      } else if (data.data.getEmployeesByName.length === 0) {
         setNoUserFound(true);
-        setEmployeeData(null);
+        setEmployeeData([]);
         setError(null);
       } else {
-        setEmployeeData(data.data.getEmployeeByName);
+        setEmployeeData(data.data.getEmployeesByName);
         setError(null);
         setNoUserFound(false);
       }
     } catch (error) {
       console.error('Network Error:', error);
       setError(error);
-      setEmployeeData(null);
+      setEmployeeData([]);
       setNoUserFound(false);
     }
   };
@@ -120,18 +192,24 @@ const AdminPage = () => {
           />
         </UserInfo>
         <button style={{color:'white'}} onClick={handleClick}>Get Employee Info</button>
-        {employeeData && (
+        {employeeData.length > 0 && (
           <div>
             <h3>Employee Information:</h3>
-            <p><Label>ID:</Label> <Info>{employeeData.employee_id}</Info></p>
-            <p><Label>Start Date:</Label> <Info>{employeeData.start_date}</Info></p>
-            <p><Label>End Date:</Label> <Info>{employeeData.end_date}</Info></p>
-            <p><Label>Leave Duration (Days):</Label> <Info>{employeeData.leave_duration_day}</Info></p>
-            <p><Label>Leave Duration (Hours):</Label> <Info>{employeeData.leave_duration_hour}</Info></p>
-            <p><Label>Leave Type:</Label> <Info>{employeeData.leave_type}</Info></p>
-            <p><Label>First Name:</Label> <Info>{employeeData.firstname}</Info></p>
-            <p><Label>Last Name:</Label> <Info>{employeeData.lastname}</Info></p>
-            <p><Label>Reason:</Label> <Info>{employeeData.reason}</Info></p>
+            {employeeData.map(employee => (
+              <div key={employee.employee_id}>
+                <p><Label>ID:</Label> <Info>{employee.employee_id}</Info></p>
+                <p><Label>Start Date:</Label> <Info>{employee.start_date}</Info></p>
+                <p><Label>End Date:</Label> <Info>{employee.end_date}</Info></p>
+                <p><Label>Leave Duration (Days):</Label> <Info>{employee.leave_duration_day}</Info></p>
+                <p><Label>Leave Duration (Hours):</Label> <Info>{employee.leave_duration_hour}</Info></p>
+                <p><Label>Leave Type:</Label> <Info>{employee.leave_type}</Info></p>
+                <p><Label>First Name:</Label> <Info>{employee.firstname}</Info></p>
+                <p><Label>Last Name:</Label> <Info>{employee.lastname}</Info></p>
+                <p><Label>Reason:</Label> <Info>{employee.reason}</Info></p>
+                <p><Label>is_checked:</Label> <Info>{employee.is_checked ? 'true' : 'false'}</Info></p>
+                <hr />
+              </div>
+            ))}
           </div>
         )}
         {noUserFound && (
