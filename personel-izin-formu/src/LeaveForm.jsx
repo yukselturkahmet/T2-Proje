@@ -21,7 +21,7 @@ const FormContainer = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    height: 100%;
+    height: 90%;
     text-align: center;
 `;
 
@@ -54,7 +54,10 @@ const Input = styled.input`
 `;
 
 const DateInput = styled(Input)`
-    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Select = styled.select`
@@ -259,7 +262,7 @@ const LeaveForm = () => {
     return (
         <FormWrapper className={"leave-form"}>
             <FormContainer>
-                <Logo src={logo} alt="Logo"/>
+                <Logo src={logo} alt="Logo" />
                 <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
                 <Form onSubmit={validateAndSubmit}>
                     <FormGroup>
@@ -324,15 +327,15 @@ const LeaveForm = () => {
                             onBlur={formik.handleBlur}
                             value={formik.values.leave_type}
                         >
-                            <option value="" label="Select"/>
-                            <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/>
-                            <option value="Casual Leave" label="Casual Leave"/>
-                            <option value="Unpaid Vacation" label="Unpaid Vacation"/>
-                            <option value="Sick Leave" label="Sick Leave"/>
-                            <option value="After Birth Permit" label="After Birth Permit"/>
-                            <option value="Death Permit" label="Death Permit"/>
-                            <option value="Marriage Permit" label="Marriage Permit"/>
+                            <option value="" label="Select" />
+                            <option value="Annual Leave" label="Annual Leave" />
+                            <option value="Offset Permit" label="Offset Permit" />
+                            <option value="Casual Leave" label="Casual Leave" />
+                            <option value="Unpaid Vacation" label="Unpaid Vacation" />
+                            <option value="Sick Leave" label="Sick Leave" />
+                            <option value="After Birth Permit" label="After Birth Permit" />
+                            <option value="Death Permit" label="Death Permit" />
+                            <option value="Marriage Permit" label="Marriage Permit" />
                         </Select>
                         {formik.touched.leave_type && formik.errors.leave_type ? (
                             <Error>{formik.errors.leave_type}</Error>

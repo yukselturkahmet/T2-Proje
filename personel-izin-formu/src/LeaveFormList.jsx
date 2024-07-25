@@ -52,7 +52,8 @@ const Pagination = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-
+    margin-bottom: 60px; /* Alt boşluk ekleyerek konumu yukarı taşı */
+    
     & > button {
         margin: 0 5px;
         padding: 5px 10px;
@@ -74,21 +75,18 @@ const Pagination = styled.div`
     }
 `;
 
+
 const LeaveFormList = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(10); // Örnek toplam sayfa sayısı
+    const [totalPages, setTotalPages] = useState(10);
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        // Örnek API çağrısı
+
         const fetchData = async () => {
-            // API çağrınızı buraya yerleştirin
-            // Örnek: const response = await fetch(`https://api.example.com/data?page=${currentPage}`);
-            // const result = await response.json();
-            // setData(result.data);
-            // setTotalPages(result.totalPages);
-            setData(Array.from({ length: 10 }, (_, i) => ({ id: i + 1, name: `Item ${i + 1 + (currentPage - 1) * 10}` }))); // Test verileri
+
+            setData(Array.from({ length: 10 }, (_, i) => ({ id: i + 1, name: `Item ${i + 1 + (currentPage - 1) * 10}` })));
         };
 
         fetchData();
