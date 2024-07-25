@@ -12,11 +12,11 @@ const resolvers = {
         }
       });
     },
-    async authenticateAdmin(_, {username, password_}) {
+    async authenticateAdmin(_, {username, pword}) {
       return await Admin.findOne({
         where: {
           username,
-          password_
+          pword
         }
       });
     },

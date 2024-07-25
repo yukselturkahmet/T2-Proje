@@ -56,7 +56,7 @@ const Admin = sequelize.define('Admin', {
   username: {
     type: DataTypes.STRING
   },
-  password_: {
+  pword: {
     type: DataTypes.STRING
   }
 }, {

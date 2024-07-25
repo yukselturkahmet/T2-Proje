@@ -88,6 +88,11 @@ const Button = styled.button`
     &:hover {
         background-color: rgb(255, 165, 0);
     }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 `;
 
 const Error = styled.div`
@@ -155,7 +160,8 @@ const LeaveForm = () => {
                 .required('Reason of permit is required.'),
         }),
 
-        onSubmit: async (values, { setSubmitting }) => {
+        onSubmit: async (values, { setSubmitting, setErrors }) => {
+            setSubmitError('');
             if (submittedSuccessfully) {
                 setSubmitError('Form has already been submitted.');
                 setSubmitting(false);
@@ -174,6 +180,7 @@ const LeaveForm = () => {
 
             const formattedStartDate = startDate.toISOString();
             const formattedEndDate = endDate.toISOString();
+
             try {
                 const response = await fetch('http://localhost:4000/graphql', {
                     method: 'POST',
@@ -230,12 +237,31 @@ const LeaveForm = () => {
         },
     });
 
+    const validateAndSubmit = (e) => {
+        e.preventDefault();
+        formik.setTouched({
+            firstname: true,
+            lastname: true,
+            leave_type: true,
+            start_date: true,
+            end_date: true,
+            leave_duration_day: true,
+            leave_duration_hour: true,
+            reason: true,
+        });
+        formik.validateForm().then((errors) => {
+            if (Object.keys(errors).length === 0) {
+                formik.handleSubmit(e);
+            }
+        });
+    };
+
     return (
         <FormWrapper className={"leave-form"}>
             <FormContainer>
                 <Logo src={logo} alt="Logo"/>
                 <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
-                <Form onSubmit={formik.handleSubmit}>
+                <Form onSubmit={validateAndSubmit}>
                     <FormGroup>
                         <Label className={"required"}>Name:</Label>
                         <Input
@@ -351,7 +377,7 @@ const LeaveForm = () => {
                             <Error>{formik.errors.reason}</Error>
                         ) : null}
                     </FormGroup>
-                    <Button type="submit" disabled={formik.isSubmitting}>
+                    <Button type="submit" disabled={formik.isSubmitting || !formik.isValid}>
                         {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                     </Button>
                     {submitError && <Error className={"error_same_value"}>{submitError}</Error>}
