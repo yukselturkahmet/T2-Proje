@@ -18,7 +18,7 @@ export const typeDefs = gql`
     admin_id: ID!
     employee_id: Int
     username: String
-    password_: String
+    pword: String
   }
 
   type User {
@@ -34,7 +34,7 @@ export const typeDefs = gql`
     getUsers: [User]
     getEmployeeByName(firstname: String!, lastname: String!): Employee
     authenticateUser(username: String!, pword: String!): User #  
-    authenticateAdmin(username: String!, password_: String!): Admin
+    authenticateAdmin(username: String!, pword: String!): Admin
   }
 
   input CreateEmployeeLeaveInput {

@@ -16,7 +16,7 @@ const FormWrapper = styled.div`
 `;
 
 const FormContainer = styled.div`
-    background: #ffffff;
+    background: transparent;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -75,7 +75,7 @@ function AdminLogin() {
                 .min(6, 'Password should include a minimum of 6 characters.'),
         }),
         onSubmit: async (values) => {
-            
+
 
 
             try {
@@ -86,33 +86,33 @@ function AdminLogin() {
                     },
                     body: JSON.stringify({
                         query: `
-                            query authenticateAdmin($username: String!, $password_: String!) {
-                                authenticateAdmin(username: $username, password_: $password_) {
+                            query authenticateAdmin($username: String!, $pword: String!) {
+                                authenticateAdmin(username: $username, pword: $pword) {
                                     username
-                                    password_
+                                    pword
                                 }
                             }
                         `,
                         variables: {
                             username: values.username,
-                            
-                            password_: values.password,
+
+                            pword: values.password,
                         },
                     }),
                 });
-        
+
                 const data = await response.json();
-        
+
                 if (data.errors) {
                     console.error('GraphQL Error:', data.errors);
                     // Handle GraphQL errors here, e.g., display error message to user
                 } else {
                     console.log(data);
-        
-                        if (data.data.authenticateAdmin) {
 
-                            console.log('Login successful');
-                            navigate('/admin-page');
+                    if (data.data.authenticateAdmin) {
+
+                        console.log('Login successful');
+                        navigate('/admin-page');
 
                     } else {
                         // Login failed
@@ -131,7 +131,7 @@ function AdminLogin() {
     return (
         <FormWrapper>
             <FormContainer>
-                <h1 style={{ color: '#000000' }}>Admin Login</h1>
+                <h1 style={{ color: '#F9F6EE' }}>Admin Login</h1>
                 <form onSubmit={formik.handleSubmit}>
                     <div>
                         <Input
