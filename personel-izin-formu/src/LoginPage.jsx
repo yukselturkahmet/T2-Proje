@@ -41,9 +41,6 @@ const GlobalStyle = createGlobalStyle`
     }
 
 `;
-
-
-
 const FormBox = styled.div`
 
     position: relative;
@@ -71,9 +68,6 @@ const FormBox = styled.div`
     z-index: 1;
 
 `;
-
-
-
 const InputBoxContainer = styled.div`
 
     width: 310px;
@@ -81,9 +75,6 @@ const InputBoxContainer = styled.div`
     margin: 30px 0;
 
 `;
-
-
-
 const InputBox = styled.div`
 
     position: relative;
@@ -91,9 +82,6 @@ const InputBox = styled.div`
     border-bottom: 2px ridge rgba(255, 239, 213, 0.75);
 
 `;
-
-
-
 const InputLabel = styled.label`
 
     position: absolute;
@@ -113,9 +101,6 @@ const InputLabel = styled.label`
     transition: 0.325s;
 
 `;
-
-
-
 const Input = styled.input`
 
     width: 100%;
@@ -146,8 +131,6 @@ const Input = styled.input`
 
 `;
 
-
-
 const Icon = styled(FontAwesomeIcon)`
 
     color: rgba(255, 239, 213, 0.75);
@@ -161,9 +144,6 @@ const Icon = styled(FontAwesomeIcon)`
     top: 18.25px;
 
 `;
-
-
-
 const Button = styled.button`
 
     border: none;
@@ -197,9 +177,6 @@ const Button = styled.button`
     }
 
 `;
-
-
-
 const AdminLink = styled.a`
 
     text-align: center;
@@ -229,9 +206,6 @@ const AdminLink = styled.a`
     }
 
 `;
-
-
-
 const Title = styled.h2`
 
     text-align: center;
@@ -239,9 +213,6 @@ const Title = styled.h2`
     font-size: 2.8em;
 
 `;
-
-
-
 const Error = styled.div`
 
     color: red;

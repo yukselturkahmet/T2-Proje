@@ -32,7 +32,7 @@ function App() {
           />
           <Route
             path="/leave-form"
-            element={isLoggedIn ? <LeaveForm /> : <Navigate to="/login" />}
+            element={isLoggedIn ? <LeaveForm username={username}/> : <Navigate to="/login" />}
           />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-page" element={<AdminPage />} />

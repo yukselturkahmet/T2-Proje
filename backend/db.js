@@ -1,12 +1,12 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-// Initialize Sequelize to connect to your MySQL database
+// Initialize Sequelize
 const sequelize = new Sequelize('t2_database', 'root', 'password', {
   host: 'localhost',
   dialect: 'mysql',
 });
 
-// Define the User model (corresponds to the `employees` table)
+// Define User model
 const User = sequelize.define('User', {
   employee_id: {
     type: DataTypes.INTEGER,
@@ -15,7 +15,8 @@ const User = sequelize.define('User', {
   },
   username: {
     type: DataTypes.STRING(40),
-    allowNull: true
+    allowNull: false,
+    unique: true
   },
   pword: {
     type: DataTypes.STRING(40),
@@ -26,10 +27,11 @@ const User = sequelize.define('User', {
   timestamps: false
 });
 
-// Define the Employee model (corresponds to the `employee_details` table)
+// Define Employee model
 const Employee = sequelize.define('Employee', {
-  employee_id: {
+  detail_id: {
     type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   start_date: {
@@ -67,13 +69,20 @@ const Employee = sequelize.define('Employee', {
   is_checked: {
     type: DataTypes.BOOLEAN,
     allowNull: true
+  },
+  username: {
+    type: DataTypes.STRING(40),
+    references: {
+      model: User,
+      key: 'username'
+    }
   }
 }, {
   tableName: 'employee_details',
   timestamps: false
 });
 
-// Define the Admin model (corresponds to the `admins` table)
+// Define Admin model
 const Admin = sequelize.define('Admin', {
   admin_id: {
     type: DataTypes.BIGINT,
@@ -101,9 +110,8 @@ const Admin = sequelize.define('Admin', {
   timestamps: false
 });
 
-// Set up associations
-User.hasOne(Employee, { foreignKey: 'employee_id' });
-Employee.belongsTo(User, { foreignKey: 'employee_id' });
+User.hasMany(Employee, { foreignKey: 'username', sourceKey: 'username' });
+Employee.belongsTo(User, { foreignKey: 'username', targetKey: 'username' });
 
 User.hasOne(Admin, { foreignKey: 'employee_id' });
 Admin.belongsTo(User, { foreignKey: 'employee_id' });

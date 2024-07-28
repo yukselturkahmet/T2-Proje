@@ -21,7 +21,7 @@ const FormContainer = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    height: 100%;
+    height: 90%;
     text-align: center;
 `;
 
@@ -54,7 +54,10 @@ const Input = styled.input`
 `;
 
 const DateInput = styled(Input)`
-    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
 `;
 
 const Select = styled.select`
@@ -88,6 +91,11 @@ const Button = styled.button`
     &:hover {
         background-color: rgb(255, 165, 0);
     }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
 `;
 
 const Error = styled.div`
@@ -108,7 +116,7 @@ const DebugInfo = styled.div`
     display: none; /* Hides the debugging information */
 `;
 
-const LeaveForm = () => {
+const LeaveForm = ({ username }) => {
     const [submitError, setSubmitError] = useState('');
     const [submittedSuccessfully, setSubmittedSuccessfully] = useState(false);
 
@@ -123,39 +131,42 @@ const LeaveForm = () => {
             leave_duration_day: '',
             reason: '',
         },
-        validationSchema: Yup.object({
-            firstname: Yup.string()
-                .max(50, 'Can be maximum 50 characters.')
-                .required('This field cannot be left empty.')
-                .test('maxLength', 'Name field has reached the maximum length of 50 characters.', value => value && value.length <= 25),
-            lastname: Yup.string()
-                .max(50, 'Can be maximum 50 characters.')
-                .required('This field cannot be left empty.'),
-            leave_type: Yup.string()
-                .required('Permit Type is required'),
-            start_date: Yup.date()
-                .nullable()
-                .transform((value, originalValue) => originalValue === "" ? null : value)
-                .required('Start date is required'),
-            end_date: Yup.date()
-                .nullable()
-                .transform((value, originalValue) => originalValue === "" ? null : value)
-                .required('End date is required')
-                .when('start_date', (start_date, schema) => {
-                    return start_date ? schema.min(start_date, 'End date must be after start date.') : schema;
-                }),
-            leave_duration_day: Yup.number()
-                .min(1, 'It can be min. 1 day').required('Duration of permit is required.')
-                .max(121, 'You have reached the maximum permit days.'),
-            leave_duration_hour: Yup.number()
-                .min(1, 'It can be min. 1 hour')
-                .required('Duration of the permit is required.'),
-            reason: Yup.string()
-                .max(200, 'Can be maximum 200 characters.')
-                .required('Reason of permit is required.'),
-        }),
+        validationSchema : Yup.object({
+    firstname: Yup.string()
+        .max(50, 'Can be maximum 50 characters.')
+        .required('This field cannot be left empty.')
+        .test('maxLength', 'Name field has reached the maximum length of 25 characters.', value => value && value.length <= 25),
+    lastname: Yup.string()
+        .max(50, 'Can be maximum 50 characters.')
+        .required('This field cannot be left empty.'),
+    leave_type: Yup.string()
+        .required('Permit Type is required'),
+    start_date: Yup.date()
+        .nullable()
+        .required('Start date is required')
+        .transform((value, originalValue) => originalValue === "" ? null : new Date(originalValue)),
+    end_date: Yup.date()
+        .nullable()
+        .required('End date is required')
+        .transform((value, originalValue) => originalValue === "" ? null : new Date(originalValue))
+        .min(Yup.ref('start_date'), 'End date must be after start date.'),
+    leave_duration_day: Yup.number()
+        .min(1, 'It can be min. 1 day')
+        .required('Duration of permit is required.')
+        .max(121, 'You have reached the maximum permit days.'),
+    leave_duration_hour: Yup.number()
+        .min(1, 'It can be min. 1 hour')
+        .required('Duration of the permit is required.'),
+    reason: Yup.string()
+        .max(200, 'Can be maximum 200 characters.')
+        .required('Reason of permit is required.'),
+}),
 
-        onSubmit: async (values, { setSubmitting }) => {
+        onSubmit: async (values, { setSubmitting, setErrors }) => {
+            console.log('Submitting form:', values);
+            console.log('Username:', username);
+            
+            setSubmitError('');
             if (submittedSuccessfully) {
                 setSubmitError('Form has already been submitted.');
                 setSubmitting(false);
@@ -165,7 +176,7 @@ const LeaveForm = () => {
             const startDate = new Date(values.start_date);
             const endDate = new Date(values.end_date);
 
-            if (isNaN(startDate) || isNaN(endDate)) {
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 console.error("Invalid date");
                 setSubmitError('Invalid date entered.');
                 setSubmitting(false);
@@ -174,6 +185,7 @@ const LeaveForm = () => {
 
             const formattedStartDate = startDate.toISOString();
             const formattedEndDate = endDate.toISOString();
+
             try {
                 const response = await fetch('http://localhost:4000/graphql', {
                     method: 'POST',
@@ -192,6 +204,7 @@ const LeaveForm = () => {
                                     firstname
                                     lastname
                                     reason
+                                    username
                                 }
                             }
                         `,
@@ -204,7 +217,8 @@ const LeaveForm = () => {
                                 leave_type: values.leave_type,
                                 firstname: values.firstname,
                                 lastname: values.lastname,
-                                reason: values.reason
+                                reason: values.reason,
+                                username: username
                             },
                         },
                     }),
@@ -230,12 +244,31 @@ const LeaveForm = () => {
         },
     });
 
+    const validateAndSubmit = (e) => {
+        e.preventDefault();
+        formik.setTouched({
+            firstname: true,
+            lastname: true,
+            leave_type: true,
+            start_date: true,
+            end_date: true,
+            leave_duration_day: true,
+            leave_duration_hour: true,
+            reason: true,
+        });
+        formik.validateForm().then((errors) => {
+            if (Object.keys(errors).length === 0) {
+                formik.handleSubmit(e);
+            }
+        });
+    };
+
     return (
         <FormWrapper className={"leave-form"}>
             <FormContainer>
-                <Logo src={logo} alt="Logo"/>
+                <Logo src={logo} alt="Logo" />
                 <h1 className={"staff_form_txt"}>Staff Permit Form</h1>
-                <Form onSubmit={formik.handleSubmit}>
+                <Form onSubmit={validateAndSubmit}>
                     <FormGroup>
                         <Label className={"required"}>Name:</Label>
                         <Input
@@ -269,7 +302,7 @@ const LeaveForm = () => {
                         <DateInput
                             type="date"
                             name="start_date"
-                            onChange={formik.handleChange}
+                            onChange={e => formik.setFieldValue('start_date', e.target.value)}
                             onBlur={formik.handleBlur}
                             value={formik.values.start_date}
                         />
@@ -282,7 +315,7 @@ const LeaveForm = () => {
                         <DateInput
                             type="date"
                             name="end_date"
-                            onChange={formik.handleChange}
+                            onChange={e => formik.setFieldValue('end_date', e.target.value)}
                             onBlur={formik.handleBlur}
                             value={formik.values.end_date}
                         />
@@ -298,15 +331,15 @@ const LeaveForm = () => {
                             onBlur={formik.handleBlur}
                             value={formik.values.leave_type}
                         >
-                            <option value="" label="Select"/>
-                            <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/>
-                            <option value="Casual Leave" label="Casual Leave"/>
-                            <option value="Unpaid Vacation" label="Unpaid Vacation"/>
-                            <option value="Sick Leave" label="Sick Leave"/>
-                            <option value="After Birth Permit" label="After Birth Permit"/>
-                            <option value="Death Permit" label="Death Permit"/>
-                            <option value="Marriage Permit" label="Marriage Permit"/>
+                            <option value="" label="Select" />
+                            <option value="Annual Leave" label="Annual Leave" />
+                            <option value="Offset Permit" label="Offset Permit" />
+                            <option value="Casual Leave" label="Casual Leave" />
+                            <option value="Unpaid Vacation" label="Unpaid Vacation" />
+                            <option value="Sick Leave" label="Sick Leave" />
+                            <option value="After Birth Permit" label="After Birth Permit" />
+                            <option value="Death Permit" label="Death Permit" />
+                            <option value="Marriage Permit" label="Marriage Permit" />
                         </Select>
                         {formik.touched.leave_type && formik.errors.leave_type ? (
                             <Error>{formik.errors.leave_type}</Error>
@@ -333,7 +366,6 @@ const LeaveForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.leave_duration_day}
-                            maxLength={122}
                         />
                         {formik.touched.leave_duration_day && formik.errors.leave_duration_day ? (
                             <Error>{formik.errors.leave_duration_day}</Error>
@@ -351,17 +383,11 @@ const LeaveForm = () => {
                             <Error>{formik.errors.reason}</Error>
                         ) : null}
                     </FormGroup>
+                    {submitError && <Error>{submitError}</Error>}
                     <Button type="submit" disabled={formik.isSubmitting}>
                         {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                     </Button>
-                    {submitError && <Error className={"error_same_value"}>{submitError}</Error>}
                 </Form>
-                <DebugInfo>
-                    <h3>Debugging Information</h3>
-                    <p>isValid: {formik.isValid.toString()}</p>
-                    <p>isSubmitting: {formik.isSubmitting.toString()}</p>
-                    <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
-                </DebugInfo>
             </FormContainer>
         </FormWrapper>
     );

@@ -2,7 +2,7 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   type Employee {
-    employee_id: ID!
+    username: String
     start_date: String
     end_date: String
     leave_duration_day: Int
@@ -11,9 +11,9 @@ export const typeDefs = gql`
     firstname: String
     lastname: String
     reason: String
-    user: User # Adding the relationship field
+    user: User
     is_checked: Boolean 
-
+    detail_id: Int
   }
 
   type Admin {
@@ -27,7 +27,7 @@ export const typeDefs = gql`
     employee_id: ID!
     username: String
     pword: String
-    employee: Employee # Adding the relationship field
+    employees: [Employee]
   }
 
   type Query {
@@ -35,7 +35,7 @@ export const typeDefs = gql`
     getAdmins: [Admin]
     getUsers: [User]
     getEmployeesByName(firstname: String!, lastname: String!): [Employee]
-    authenticateUser(username: String!, pword: String!): User #  
+    authenticateUser(username: String!, pword: String!): User
     authenticateAdmin(username: String!, password_: String!): Admin
     getEmployeesByUsername(username: String!): [Employee]
   }
@@ -49,6 +49,7 @@ export const typeDefs = gql`
     firstname: String!
     lastname: String!
     reason: String!
+    username: String! 
   }
 
   input CreateUserInput {

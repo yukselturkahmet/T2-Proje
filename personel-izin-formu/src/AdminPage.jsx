@@ -130,7 +130,6 @@ const AdminPage = () => {
           query: `
             query GetEmployeesByName($firstname: String!, $lastname: String!) {
               getEmployeesByName(firstname: $firstname, lastname: $lastname) {
-                employee_id
                 start_date
                 end_date
                 leave_duration_day

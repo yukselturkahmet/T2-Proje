@@ -60,8 +60,11 @@ const LeaveFormList = ({ username }) => {
                     },
                     body: JSON.stringify({
                         query: `
-                            query getEmployeeLeaves($username: String!) {
-                                getEmployeeLeaves(username: $username) {
+                            query getEmployeesByUsername($username: String!) {
+                                getEmployeesByUsername(username: $username) {
+                                    firstname
+                                    lastname
+                                    is_checked
                                     start_date
                                     end_date
                                     leave_duration_day
@@ -75,10 +78,17 @@ const LeaveFormList = ({ username }) => {
                     }),
                 });
 
-                const { data } = await response.json();
-                setLeaveForms(data.getEmployeeLeaves);
+                const { data, errors } = await response.json();
+
+                if (errors) {
+                    console.error('GraphQL errors:', errors);
+                    setLeaveForms([]); // Set to empty array in case of errors
+                } else {
+                    setLeaveForms(data.getEmployeesByUsername || []);
+                }
             } catch (error) {
                 console.error('Error fetching leave forms:', error);
+                setLeaveForms([]); // Set to empty array in case of an error
             }
         };
 
@@ -95,14 +105,18 @@ const LeaveFormList = ({ username }) => {
                 {leaveForms.length > 0 ? (
                     leaveForms.map((leave, index) => (
                         <div key={index}>
-                            <h3>{leave.leave_type}</h3>
-                            <p>{`From: ${leave.start_date} To: ${leave.end_date}`}</p>
-                            <p>{`Duration: ${leave.leave_duration_day} days, ${leave.leave_duration_hour} hours`}</p>
-                            <p>{`Reason: ${leave.reason}`}</p>
+                            <p style={{ color: 'black' }}>{`Firstname: ${leave.firstname}`}</p>
+                            <p style={{ color: 'black' }}>{`Lastname: ${leave.lastname}`}</p>
+                            <p style={{ color: 'black' }}>{`Is Checked: ${leave.is_checked ? 'Yes' : 'No'}`}</p>
+                            <p style={{ color: 'black' }}>{`Leave Type: ${leave.leave_type}`}</p>
+                            <p style={{ color: 'black' }}>{`Start Date: ${leave.start_date}`}</p>
+                            <p style={{ color: 'black' }}>{`End Date: ${leave.end_date}`}</p>
+                            <p style={{ color: 'black' }}>{`Duration: ${leave.leave_duration_day} days, ${leave.leave_duration_hour} hours`}</p>
+                            <p style={{ color: 'black' }}>{`Reason: ${leave.reason}`}</p>
                         </div>
                     ))
                 ) : (
-                    <p>No leave forms found.</p>
+                    <p style={{ color: 'black' }}>No leave forms found.</p>
                 )}
             </DataSection>
             <Button onClick={handleButtonClick}>Yeni İzin Formu</Button> 
