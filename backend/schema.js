@@ -29,16 +29,25 @@ export const typeDefs = gql`
     pword: String
     employees: [Employee]
   }
+  type LeaveFormPage {
+  leaveForms: [Employee]
+  totalPages: Int
+}
 
   type Query {
     getEmployees: [Employee]
     getAdmins: [Admin]
     getUsers: [User]
-    getEmployeesByName(firstname: String!, lastname: String!): [Employee]
+    getEmployeesByName(firstname: String!, lastname: String!, page: Int, pageSize: Int): EmployeePage!
     authenticateUser(username: String!, pword: String!): User
     authenticateAdmin(username: String!, password_: String!): Admin
-    getEmployeesByUsername(username: String!): [Employee]
+    getEmployeesByUsername(username: String!, page: Int!): LeaveFormPage
+
   }
+  type EmployeePage {
+  employees: [Employee!]!
+  totalPages: Int!
+}
 
   input CreateEmployeeLeaveInput {
     start_date: String!

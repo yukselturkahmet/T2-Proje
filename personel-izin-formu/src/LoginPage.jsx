@@ -167,6 +167,8 @@ const Button = styled.button`
     cursor: pointer;
 
     background: transparent;
+    
+    color: rgba(255, 239, 213, 0.75);
 
 
 

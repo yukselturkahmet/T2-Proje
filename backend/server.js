@@ -3,19 +3,26 @@ import { typeDefs } from './schema.js';
 import { sequelize, Employee, Admin, User } from './db.js';
 
 const resolvers = {
-  Query: {  
-    getEmployeesByUsername: async (_, { username }) => {
+  Query: {
+    async getEmployeesByUsername(_, { username, page = 1 }) {
+      const pageSize = 1; // Number of items per page
+      const offset = (page - 1) * pageSize;
+
       try {
-        const user = await User.findOne({
-          where: { username },
-          include: [{ model: Employee }]
+        const { count, rows } = await Employee.findAndCountAll({
+          where: {
+            username
+          },
+          limit: pageSize,
+          offset
         });
-    
-        if (!user) {
-          throw new Error('User not found');
-        }
-    
-        return user.Employees;
+
+        const totalPages = Math.ceil(count / pageSize);
+
+        return {
+          leaveForms: rows,
+          totalPages
+        };
       } catch (error) {
         console.error('Error fetching employees:', error.message);
         throw new Error('Failed to fetch employees');
@@ -46,15 +53,25 @@ const resolvers = {
       return await User.findAll();
     },
 
-    async getEmployeesByName(_, { firstname, lastname }) {
-      return await Employee.findAll({
-        where: { firstname, lastname }
+    async getEmployeesByName(_, { firstname, lastname, page = 1, pageSize = 10 }) {
+      const offset = (page - 1) * pageSize;
+      const { count, rows } = await Employee.findAndCountAll({
+        where: { firstname, lastname },
+        offset,
+        limit: pageSize,
       });
+    
+      const totalPages = Math.ceil(count / pageSize);
+    
+      return {
+        employees: rows,
+        totalPages,
+      };
     }
   },
   Mutation: {
     async createEmployeeLeave(_, { input }) {
-      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason, is_checked,employee_id,username } = input;
+      const { start_date, end_date, leave_duration_day, leave_duration_hour, leave_type, firstname, lastname, reason, username } = input;
       return await Employee.create({
         start_date,
         end_date,
@@ -64,8 +81,6 @@ const resolvers = {
         firstname,
         lastname,
         reason,
-        is_checked,
-        employee_id,
         username
       });
     },
@@ -86,7 +101,7 @@ const resolvers = {
     }
   },
   User: {
-    employees: async (parent) => { // Updated to `employees` to match schema
+    employees: async (parent) => {
       return await Employee.findAll({
         where: { employee_id: parent.employee_id }
       });

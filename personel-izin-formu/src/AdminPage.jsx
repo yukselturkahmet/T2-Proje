@@ -34,81 +34,39 @@ const Info = styled.span`
 `;
 
 const Input = styled.input`
-
   margin: 10px 0;
-
   padding: 12px;
-
   width: calc(100% - 24px);
-
   border-radius: 6px;
-
   border: 1px solid #ddd;
-
   font-size: 16px;
-
 `;
-
-
 
 const Button = styled.button`
-
   display: inline-block;
-
   margin-top: 20px;
-
   padding: 10px 20px;
-
   background-color: #007BFF;
-
   color: white;
-
   border: none;
-
   border-radius: 6px;
-
   font-size: 16px;
-
   cursor: pointer;
-
   transition: background-color 0.3s;
 
-
-
   &:hover {
-
     background-color: #0056b3;
-
   }
-
 `;
-
-
 
 const ErrorText = styled.div`
-
   margin-top: 20px;
-
   color: #d9534f;
-
 `;
-
-
 
 const NoUserText = styled.div`
-
   margin-top: 20px;
-
   color: #f0ad4e;
-
-`;
-
-
-
-const EmployeeDataContainer = styled.div`
-
-  margin-top: 20px;
-
 `;
 
 const AdminPage = () => {
@@ -117,6 +75,8 @@ const AdminPage = () => {
   const [employeeData, setEmployeeData] = useState([]);
   const [error, setError] = useState(null);
   const [noUserFound, setNoUserFound] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleClick = async () => {
     console.log('Button clicked!');
@@ -128,23 +88,27 @@ const AdminPage = () => {
         },
         body: JSON.stringify({
           query: `
-            query GetEmployeesByName($firstname: String!, $lastname: String!) {
-              getEmployeesByName(firstname: $firstname, lastname: $lastname) {
-                start_date
-                end_date
-                leave_duration_day
-                leave_duration_hour
-                leave_type
-                firstname
-                lastname
-                reason
-                is_checked
+            query GetEmployeesByName($firstname: String!, $lastname: String!, $page: Int!) {
+              getEmployeesByName(firstname: $firstname, lastname: $lastname, page: $page) {
+                employees {
+                  start_date
+                  end_date
+                  leave_duration_day
+                  leave_duration_hour
+                  leave_type
+                  firstname
+                  lastname
+                  reason
+                  is_checked
+                }
+                totalPages
               }
             }
           `,
           variables: {
             firstname,
             lastname,
+            page: currentPage,
           },
         }),
       });
@@ -156,12 +120,13 @@ const AdminPage = () => {
         setError(data.errors);
         setEmployeeData([]);
         setNoUserFound(false);
-      } else if (data.data.getEmployeesByName.length === 0) {
+      } else if (data.data.getEmployeesByName.employees.length === 0) {
         setNoUserFound(true);
         setEmployeeData([]);
         setError(null);
       } else {
-        setEmployeeData(data.data.getEmployeesByName);
+        setEmployeeData(data.data.getEmployeesByName.employees);
+        setTotalPages(data.data.getEmployeesByName.totalPages);
         setError(null);
         setNoUserFound(false);
       }
@@ -170,6 +135,13 @@ const AdminPage = () => {
       setError(error);
       setEmployeeData([]);
       setNoUserFound(false);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      handleClick(); // Fetch data for the new page
     }
   };
 
@@ -190,37 +162,37 @@ const AdminPage = () => {
             onChange={(e) => setLastname(e.target.value)}
           />
         </UserInfo>
-        <button style={{color:'white'}} onClick={handleClick}>Get Employee Info</button>
+        <Button onClick={handleClick}>Get Employee Info</Button>
         {employeeData.length > 0 && (
           <div>
-            <h3>Employee Information:</h3>
-            {employeeData.map(employee => (
-              <div key={employee.employee_id}>
-                <p><Label>ID:</Label> <Info>{employee.employee_id}</Info></p>
-                <p><Label>Start Date:</Label> <Info>{employee.start_date}</Info></p>
-                <p><Label>End Date:</Label> <Info>{employee.end_date}</Info></p>
-                <p><Label>Leave Duration (Days):</Label> <Info>{employee.leave_duration_day}</Info></p>
-                <p><Label>Leave Duration (Hours):</Label> <Info>{employee.leave_duration_hour}</Info></p>
-                <p><Label>Leave Type:</Label> <Info>{employee.leave_type}</Info></p>
-                <p><Label>First Name:</Label> <Info>{employee.firstname}</Info></p>
-                <p><Label>Last Name:</Label> <Info>{employee.lastname}</Info></p>
-                <p><Label>Reason:</Label> <Info>{employee.reason}</Info></p>
-                <p><Label>is_checked:</Label> <Info>{employee.is_checked ? 'true' : 'false'}</Info></p>
-                <hr />
-              </div>
-            ))}
+          <h3>Employee Information:</h3>
+          {employeeData.map(employee => (
+            <div key={employee.employee_id}>
+              <p><Label>ID:</Label> <Info>{employee.employee_id}</Info></p>
+              <p><Label>Start Date:</Label> <Info>{employee.start_date}</Info></p>
+              <p><Label>End Date:</Label> <Info>{employee.end_date}</Info></p>
+              <p><Label>Leave Duration (Days):</Label> <Info>{employee.leave_duration_day}</Info></p>
+              <p><Label>Leave Duration (Hours):</Label> <Info>{employee.leave_duration_hour}</Info></p>
+              <p><Label>Leave Type:</Label> <Info>{employee.leave_type}</Info></p>
+              <p><Label>First Name:</Label> <Info>{employee.firstname}</Info></p>
+              <p><Label>Last Name:</Label> <Info>{employee.lastname}</Info></p>
+              <p><Label>Reason:</Label> <Info>{employee.reason}</Info></p>
+              <p><Label>is_checked:</Label> <Info>{employee.is_checked ? 'true' : 'false'}</Info></p>
+              <hr />
+            </div>
+          ))}
+          <div>
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
+            <span>{currentPage} / {totalPages}</span>
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
           </div>
+        </div>
         )}
         {noUserFound && (
-          <div>
-            <h3 style={{color:'black'}}>No user found with the given name.</h3>
-          </div>
+          <NoUserText>No user found with the given name.</NoUserText>
         )}
         {error && (
-          <div>
-            <h3>Error:</h3>
-            <pre>{JSON.stringify(error, null, 2)}</pre>
-          </div>
+          <ErrorText>Error: {error.message}</ErrorText>
         )}
       </AdminContent>
     </AdminPageWrapper>
