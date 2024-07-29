@@ -212,9 +212,9 @@ const LeaveForm = () => {
                             onBlur={formik.handleBlur}
                             value={formik.values.leaveType}
                         >
-                            <option value="" label="Seçiniz"/>
+                            <option value="" label="Choose"/>
                             <option value="Annual Leave" label="Annual Leave"/>
-                            <option value="Offset Permit" label="Offset Permit"/> --Mahsup izin ingilizceye cevirirken offset oldugundan emin degilim.
+                            <option value="Offset Permit" label="Offset Permit"/> 
                             <option value="Casual Leave " label="Casual Leave"/>
                             <option value="Unpaid Vacation" label="Unpaid Vacation"/>
                             <option value="Sick Leave" label="Sick Leave"/>
