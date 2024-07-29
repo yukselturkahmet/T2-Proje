@@ -9,7 +9,7 @@ const FormWrapper = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f2f5;
+    background: linear-gradient(45deg, #144FC4, #48BB27);
     padding: 20px;
     box-sizing: border-box;
     margin: 0;
