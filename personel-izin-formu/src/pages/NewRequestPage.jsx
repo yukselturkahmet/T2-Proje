@@ -60,15 +60,17 @@ const TypeOption = styled.label`
   @media (max-width: 640px) { padding: 12px; strong { font-size: 14px; } }
   border-radius: 14px;
   border: 1px solid ${(p) => (p.$checked ? t.blue : t.line)};
-  background: ${(p) => (p.$checked ? t.blueTint : t.raised)};
+  background: ${(p) => (p.$checked ? t.blueTint : t.surface)};
+  box-shadow: ${(p) => (p.$checked ? `0 0 0 1px ${t.blue}` : 'none')};
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ${t.ease};
+  &:active { transform: scale(0.98); }
 
   &:hover { border-color: ${(p) => (p.$checked ? t.blue : t.lineStrong)}; }
   &:has(input:focus-visible) { outline: 2px solid ${t.blue}; outline-offset: 2px; }
 
   input { position: absolute; opacity: 0; pointer-events: none; }
-  strong { display: block; color: ${t.text}; font-size: 15px; font-weight: 500; }
+  strong { display: block; color: ${(p) => (p.$checked ? t.blue : t.text)}; font-size: 15px; font-weight: 600; }
   span { display: block; margin-top: 2px; font-size: 13px; color: ${t.textMuted}; }
 `;
 
@@ -78,7 +80,7 @@ const TypeHint = styled.p`
   color: ${t.textSoft};
   padding: 14px 16px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: ${t.surfaceSoft};
   border: 1px solid ${t.line};
 `;
 
@@ -104,12 +106,12 @@ const Total = styled.div`
     margin-top: 4px;
     color: ${t.text};
     font-size: 64px;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: -0.045em;
     line-height: 1;
     font-variant-numeric: tabular-nums;
   }
-  strong small { font-size: 20px; color: ${t.textSoft}; margin-left: 8px; letter-spacing: -0.01em; }
+  strong small { font-size: 20px; font-weight: 600; color: ${t.green}; margin-left: 8px; letter-spacing: -0.01em; }
   p { margin-top: 10px; font-size: 14px; color: ${t.textSoft}; }
 `;
 
@@ -274,7 +276,7 @@ export function NewRequestPage() {
             {rule.usesAnnualBalance && (
               <div>
                 <dt>{tr('request.balanceAfter')}</dt>
-                <dd style={{ color: balanceAfter != null && balanceAfter < 0 ? t.red : undefined }}>
+                <dd style={{ color: balanceAfter != null && balanceAfter < 0 ? t.status.red.fg : undefined }}>
                   {format.days(balanceAfter ?? user.annualBalance.available)}
                 </dd>
               </div>
