@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { session } from '../api/client';
 import { CHANGE_PASSWORD } from '../api/operations';
 import { useAuth } from '../auth/AuthProvider';
@@ -12,13 +12,15 @@ import { Button } from './Button';
 import { Dialog, DialogActions } from './Dialog';
 import { Notice, useToast } from './Feedback';
 import { Field } from './Form';
+import { Logo } from './Brand';
+import { Indicator, Segmented, useSlidingIndicator } from './Segmented';
 import { Avatar, initials } from './Surface';
 
 const Bar = styled.header`
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid ${t.line};
 `;
@@ -31,23 +33,23 @@ const Inner = styled.div`
   display: flex;
   align-items: center;
   gap: 28px;
-  @media (max-width: 640px) { padding: 0 16px; gap: 12px; height: 64px; }
+  @media (max-width: 640px) { padding: 0 12px; gap: 10px; height: 64px; }
 `;
 
 const Brand = styled(NavLink)`
   flex: none;
   display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   color: ${t.text};
   text-decoration: none;
 
-  b { font-size: 24px; font-weight: 600; letter-spacing: -0.04em; }
-  span { font-size: 15px; color: ${t.textMuted}; }
-  @media (max-width: 640px) { span { display: none; } }
+  span { font-size: 15px; font-weight: 600; color: ${t.textSoft}; padding-left: 12px; border-left: 1px solid ${t.line}; }
+  @media (max-width: 640px) { span { display: none; } img { height: 30px; } }
 `;
 
 const Nav = styled.nav`
+  position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
@@ -56,40 +58,23 @@ const Nav = styled.nav`
   scrollbar-width: none;
 
   a {
+    position: relative;
+    z-index: 1;
     padding: 8px 14px;
     border-radius: ${t.radius.pill};
-    color: rgba(216, 223, 233, 0.75);
+    color: ${t.textSoft};
     font-size: 15px;
+    font-weight: 500;
     text-decoration: none;
     white-space: nowrap;
-    transition: color 0.15s ease, background-color 0.15s ease;
+    transition: color 0.25s ease;
     &:hover { color: ${t.text}; }
-    &.active { color: ${t.text}; background: rgba(255, 255, 255, 0.07); }
+    &.active { color: ${t.blue}; font-weight: 600; }
   }
   @media (max-width: 640px) {
     a { padding: 7px 10px; font-size: 14px; }
     /* Fade the right edge so it's clear the menu scrolls sideways. */
     mask-image: linear-gradient(to right, #000 82%, transparent);
-  }
-`;
-
-const Lang = styled.div`
-  flex: none;
-  display: inline-flex;
-  border: 1px solid ${t.line};
-  border-radius: ${t.radius.pill};
-  padding: 3px;
-
-  button {
-    border: 0;
-    background: none;
-    color: ${t.textMuted};
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 9px;
-    border-radius: ${t.radius.pill};
-    cursor: pointer;
-    &[aria-pressed='true'] { background: rgba(255, 255, 255, 0.1); color: ${t.text}; }
   }
 `;
 
@@ -108,24 +93,32 @@ const MenuButton = styled.button`
   border-radius: ${t.radius.pill};
   color: ${t.textSoft};
   cursor: pointer;
-  &:hover { background: rgba(255, 255, 255, 0.05); }
-  .name { font-size: 14px; }
+  transition: background-color 0.15s ease;
+  &:hover { background: ${t.hover}; }
+  .name { font-size: 14px; font-weight: 600; padding-right: 8px; }
   @media (max-width: 960px) { .name { display: none; } }
+`;
+
+const drop = keyframes`
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
 `;
 
 const Menu = styled.div`
   position: absolute;
   right: 0;
   top: calc(100% + 10px);
-  min-width: 220px;
+  min-width: 230px;
   padding: 8px;
   border-radius: 16px;
-  border: 1px solid ${t.lineStrong};
-  background: #0B121C;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid ${t.line};
+  background: ${t.surface};
+  box-shadow: ${t.shadowPop};
+  transform-origin: top right;
+  animation: ${drop} 0.22s ${t.ease};
 
   p { padding: 8px 12px 10px; font-size: 13px; color: ${t.textMuted}; border-bottom: 1px solid ${t.line}; margin-bottom: 6px; }
-  p strong { display: block; color: ${t.text}; font-size: 14px; font-weight: 500; }
+  p strong { display: block; color: ${t.text}; font-size: 14px; font-weight: 600; }
   button {
     display: block;
     width: 100%;
@@ -137,14 +130,14 @@ const Menu = styled.div`
     color: ${t.textSoft};
     font-size: 14px;
     cursor: pointer;
-    &:hover { background: rgba(255, 255, 255, 0.06); color: ${t.text}; }
+    &:hover { background: ${t.hover}; color: ${t.text}; }
   }
 `;
 
 const DemoBar = styled.div`
-  background: ${t.amberTint};
-  border-bottom: 1px solid rgba(242, 184, 75, 0.25);
-  color: #F7D58F;
+  background: ${t.status.amber.bg};
+  border-bottom: 1px solid ${t.status.amber.border};
+  color: ${t.status.amber.fg};
   font-size: 13px;
   text-align: center;
   padding: 7px 16px;
@@ -154,6 +147,7 @@ const DemoBar = styled.div`
     border: 0;
     background: none;
     color: inherit;
+    font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 3px;
     cursor: pointer;
@@ -207,6 +201,7 @@ export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const menuRef = useRef(null);
+  const navRef = useRef(null);
   const location = useLocation();
 
   // New page: close the menu and start at the top.
@@ -227,6 +222,8 @@ export function AppShell() {
       document.removeEventListener('keydown', onKey);
     };
   }, [menuOpen]);
+
+  const navIndicator = useSlidingIndicator(navRef, 'a.active', [location.pathname, lang]);
 
   const isAdmin = user.role === 'ADMIN';
   const links = [
@@ -251,15 +248,18 @@ export function AppShell() {
       )}
       <Bar>
         <Inner>
-          <Brand to="/"><b>T2</b><span>{tr('app.name')}</span></Brand>
-          <Nav aria-label="Main">
+          <Brand to="/"><Logo $height={34} /><span>{tr('app.name')}</span></Brand>
+          <Nav aria-label="Main" ref={navRef}>
+            <Indicator style={navIndicator} $color={t.blueTint} $flat />
             {links.map(([to, label]) => <NavLink key={to} to={to} end>{label}</NavLink>)}
           </Nav>
-          <Lang role="group" aria-label={tr('nav.language')}>
-            {LANGUAGES.map((code) => (
-              <button key={code} aria-pressed={lang === code} onClick={() => setLang(code)}>{code.toUpperCase()}</button>
-            ))}
-          </Lang>
+          <Segmented
+            small
+            label={tr('nav.language')}
+            value={lang}
+            onChange={setLang}
+            options={LANGUAGES.map((code) => ({ value: code, label: code.toUpperCase() }))}
+          />
           <MenuWrap ref={menuRef}>
             <MenuButton aria-haspopup="menu" aria-expanded={menuOpen} aria-label={tr('nav.menu')} onClick={() => setMenuOpen((o) => !o)}>
               <Avatar $size={36}>{initials(user)}</Avatar>
