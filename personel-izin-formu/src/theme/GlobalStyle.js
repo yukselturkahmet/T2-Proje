@@ -4,7 +4,12 @@ import { t } from './tokens';
 export const GlobalStyle = createGlobalStyle`
   *, *::before, *::after { box-sizing: border-box; }
 
-  html { color-scheme: light; }
+  html {
+    color-scheme: light;
+    /* Always reserve room for the scrollbar, so the page doesn't jump
+       sideways when a screen is taller or shorter than the window. */
+    scrollbar-gutter: stable;
+  }
   html, body, #root { margin: 0; min-height: 100%; }
 
   body {
