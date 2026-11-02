@@ -3,10 +3,10 @@ import styled, { css } from 'styled-components';
 import { t } from '../theme/tokens';
 import { useI18n } from '../i18n/I18nProvider';
 
-// Cards use the same soft navy gradient as the T2 website.
 export const Card = styled.section`
-  background: linear-gradient(140deg, rgba(29, 40, 56, 0.55), rgba(16, 24, 36, 0.55));
+  background: ${t.surface};
   border: 1px solid ${t.line};
+  box-shadow: ${t.shadow};
   border-radius: ${t.radius.card};
   ${(p) => p.$pad !== false && css`padding: ${p.$pad || '28px'};`}
 
@@ -15,27 +15,27 @@ export const Card = styled.section`
   }
 `;
 
-// Outlined pill, like the section labels on t2.com.tr.
+// Small outlined pill for labels and statuses.
 export const Tag = styled.span`
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
   border-radius: ${t.radius.pill};
-  border: 1px solid ${(p) => p.$border || 'rgba(49, 131, 255, 0.45)'};
-  background: ${(p) => p.$bg || 'rgba(49, 131, 255, 0.08)'};
-  color: ${(p) => p.$color || '#7DB0FF'};
+  border: 1px solid ${(p) => (p.$tone || t.status.blue).border};
+  background: ${(p) => (p.$tone || t.status.blue).bg};
+  color: ${(p) => (p.$tone || t.status.blue).fg};
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.4;
   white-space: nowrap;
 `;
 
-const STATUS_STYLE = {
-  PENDING: { $color: t.amber, $bg: t.amberTint, $border: 'rgba(242, 184, 75, 0.35)' },
-  APPROVED: { $color: t.green, $bg: t.greenTint, $border: 'rgba(69, 211, 142, 0.35)' },
-  REJECTED: { $color: t.red, $bg: t.redTint, $border: 'rgba(255, 111, 111, 0.35)' },
-  CANCELLED: { $color: t.textMuted, $bg: 'rgba(133, 146, 166, 0.10)', $border: 'rgba(133, 146, 166, 0.3)' },
+const STATUS_TONE = {
+  PENDING: t.status.amber,
+  APPROVED: t.status.green,
+  REJECTED: t.status.red,
+  CANCELLED: t.status.gray,
 };
 
 const Dot = styled.span`
@@ -48,7 +48,7 @@ const Dot = styled.span`
 export function StatusBadge({ status }) {
   const { t: tr } = useI18n();
   return (
-    <Tag {...STATUS_STYLE[status]}>
+    <Tag $tone={STATUS_TONE[status]}>
       <Dot aria-hidden="true" />
       {tr(`status.${status}`)}
     </Tag>
@@ -60,7 +60,7 @@ export const Stat = styled.div`
     display: block;
     color: ${t.text};
     font-size: clamp(30px, 3.4vw, 40px);
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.03em;
     line-height: 1.05;
     font-variant-numeric: tabular-nums;
@@ -76,7 +76,7 @@ export const Avatar = styled.span`
   display: inline-grid;
   place-items: center;
   background: ${t.blueTint};
-  color: #9CC2FF;
+  color: ${t.blue};
   font-size: ${(p) => Math.round((p.$size || 40) * 0.36)}px;
   font-weight: 600;
 `;
