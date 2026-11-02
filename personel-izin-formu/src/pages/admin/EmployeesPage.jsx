@@ -174,7 +174,7 @@ export function EmployeesPage() {
                   </td>
                   <td>
                     {tr(`employees.roles.${u.role}`)}
-                    {!u.active && <> <Tag $color={t.textMuted} $bg="transparent" $border={t.line}>{tr('employees.inactive')}</Tag></>}
+                    {!u.active && <> <Tag $tone={t.status.gray}>{tr('employees.inactive')}</Tag></>}
                   </td>
                   <td className="num">{format.date(u.hireDate)}</td>
                   <td className="num">{format.years(u.annualBalance.yearsOfService)}</td>
