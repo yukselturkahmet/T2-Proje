@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { CANCEL_LEAVE, MY_REQUESTS } from '../api/operations';
 import { useAuth } from '../auth/AuthProvider';
-import { BrandCircles } from '../components/Brand';
+import { BigLogo } from '../components/Brand';
 import { Button } from '../components/Button';
 import { Dialog, DialogActions } from '../components/Dialog';
 import { EmptyState, LoadError, Loading, Notice, useTitle, useToast } from '../components/Feedback';
@@ -161,7 +161,7 @@ export function DashboardPage() {
       )}
 
       <Hero>
-        <BrandCircles $size={320} $right="-120px" $bottom="-150px" />
+        <BigLogo width={400} right="-60px" bottom="-70px" />
         <div>
           <Greeting>{tr('dashboard.greeting', { name: user.firstName })}</Greeting>
           <Big>
