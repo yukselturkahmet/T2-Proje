@@ -12,6 +12,7 @@ export const t = {
   textMuted: '#687A8C',
 
   blue: '#0B5181',
+  brandBlue: '#055381', // exact blue of the logo artwork
   blueHover: '#083F66',
   blueTint: '#E7EFF6',
   blueText: '#0B5181',
