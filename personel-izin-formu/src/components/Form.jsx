@@ -8,23 +8,21 @@ const control = css`
   min-height: 48px;
   padding: 12px 16px;
   border-radius: ${t.radius.control};
-  border: 1px solid ${(p) => (p.$invalid ? t.red : t.line)};
-  background: ${t.raised};
+  border: 1px solid ${(p) => (p.$invalid ? t.status.red.fg : t.lineStrong)};
+  background: ${t.surface};
   color: ${t.text};
   font-size: 15px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 
   &::placeholder { color: ${t.textMuted}; }
-  &:hover:not(:disabled) { border-color: ${(p) => (p.$invalid ? t.red : t.lineStrong)}; }
+  &:hover:not(:disabled) { border-color: ${(p) => (p.$invalid ? t.status.red.fg : t.textMuted)}; }
   &:focus {
     outline: none;
     border-color: ${t.blue};
     box-shadow: 0 0 0 4px ${t.blueTint};
   }
-  &:disabled { opacity: 0.5; }
-
-  /* Native date picker icon on a dark background */
-  &::-webkit-calendar-picker-indicator { filter: invert(0.85); cursor: pointer; }
+  &:disabled { opacity: 0.55; background: ${t.surfaceSoft}; }
+  &::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.7; }
 `;
 
 export const Input = styled.input`${control}`;
@@ -33,10 +31,9 @@ export const Select = styled.select`
   ${control}
   appearance: none;
   padding-right: 44px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23D8DFE9' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23687A8C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 18px center;
-  option { background: ${t.card}; color: ${t.text}; }
 `;
 
 export const Textarea = styled.textarea`
@@ -56,7 +53,7 @@ const Wrap = styled.div`
 
 const Label = styled.label`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: ${t.text};
   span { color: ${t.textMuted}; font-weight: 400; }
 `;
@@ -64,7 +61,7 @@ const Label = styled.label`
 const Hint = styled.p`
   font-size: 13px;
   line-height: 1.45;
-  color: ${(p) => (p.$error ? t.red : t.textMuted)};
+  color: ${(p) => (p.$error ? t.status.red.fg : t.textMuted)};
 `;
 
 /** Label + control + hint or error. Extra props go to the control. */
