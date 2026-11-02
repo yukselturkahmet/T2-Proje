@@ -5,11 +5,12 @@ import { useI18n } from '../i18n/I18nProvider';
 import { useFormat } from '../utils/useFormat';
 import { Button } from './Button';
 
+const toneOf = (s) => css`background: ${s.bg}; border-color: ${s.border}; color: ${s.fg};`;
 const tones = {
-  error: css`background: ${t.redTint}; border-color: rgba(255, 111, 111, 0.3); color: #FFB0B0;`,
-  success: css`background: ${t.greenTint}; border-color: rgba(69, 211, 142, 0.3); color: #9BE8C2;`,
-  info: css`background: ${t.blueTint}; border-color: rgba(49, 131, 255, 0.3); color: #A9CBFF;`,
-  warning: css`background: ${t.amberTint}; border-color: rgba(242, 184, 75, 0.3); color: #F7D58F;`,
+  error: toneOf(t.status.red),
+  success: toneOf(t.status.green),
+  info: toneOf(t.status.blue),
+  warning: toneOf(t.status.amber),
 };
 
 export const Notice = styled.div.attrs((p) => ({ role: p.$tone === 'error' ? 'alert' : 'status' }))`
@@ -26,6 +27,7 @@ const Empty = styled.div`
   text-align: center;
   border: 1px dashed ${t.lineStrong};
   border-radius: ${t.radius.card};
+  background: ${t.surface};
 
   h3 { font-size: 18px; letter-spacing: -0.01em; }
   p { margin: 8px auto 0; max-width: 42ch; color: ${t.textMuted}; }
@@ -58,7 +60,7 @@ const SpinnerWrap = styled.div`
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 2px solid ${t.lineStrong};
+    border: 2px solid ${t.line};
     border-top-color: ${t.blue};
     animation: ${spin} 0.8s linear infinite;
   }
@@ -100,8 +102,7 @@ const ToastStack = styled.div`
 `;
 
 const ToastItem = styled(Notice)`
-  background: #0E1A2B;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: ${t.shadowPop};
   animation: ${rise} 0.2s ease-out;
 `;
 
