@@ -14,43 +14,43 @@ export const LEAVE_TYPES = {
   ANNUAL: {
     unit: 'workdays', paid: true, usesAnnualBalance: true,
     minServiceYears: 1, minNoticeDays: 3, maxPastDays: 0,
-    source: 'law', legalRef: '4857 m.53–56',
+    source: 'law',
   },
   SICK: {
     unit: 'workdays', paid: true, requiresDocument: true,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '5510 m.18',
+    source: 'law',
   },
   MARRIAGE: {
     unit: 'workdays', paid: true, maxPerRequest: 3,
     minNoticeDays: 0, maxPastDays: 0,
-    source: 'law', legalRef: '4857 Ek m.2',
+    source: 'law',
   },
   PATERNITY: {
     unit: 'workdays', paid: true, maxPerRequest: 10,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '4857 Ek m.2',
+    source: 'law',
   },
   BEREAVEMENT: {
     unit: 'workdays', paid: true, maxPerRequest: 3,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '4857 Ek m.2',
+    source: 'law',
   },
   ADOPTION: {
     unit: 'workdays', paid: true, maxPerRequest: 3,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '4857 Ek m.2',
+    source: 'law',
   },
   CHILD_CARE: {
     unit: 'workdays', paid: true, yearlyLimit: 10, requiresDocument: true,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '4857 Ek m.2',
+    source: 'law',
   },
   MATERNITY: {
     // 24 weeks; 26 weeks for a multiple pregnancy.
     unit: 'calendar', paid: true, maxPerRequest: 182, requiresDocument: true,
     minNoticeDays: 0, maxPastDays: 30,
-    source: 'law', legalRef: '4857 m.74',
+    source: 'law',
   },
   EXCUSE: {
     unit: 'workdays', paid: true, yearlyLimit: 5,
