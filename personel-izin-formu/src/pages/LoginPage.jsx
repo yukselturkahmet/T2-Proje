@@ -1,108 +1,112 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { session } from '../api/client';
 import { useAuth } from '../auth/AuthProvider';
-import { Beams } from '../components/Beams';
+import { BrandCircles, Logo } from '../components/Brand';
 import { Button } from '../components/Button';
 import { Notice, useTitle } from '../components/Feedback';
 import { Field } from '../components/Form';
+import { Segmented } from '../components/Segmented';
 import { LANGUAGES, useI18n } from '../i18n/I18nProvider';
 import { t } from '../theme/tokens';
 import { useFormat } from '../utils/useFormat';
 
 const Screen = styled.div`
-  position: relative;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 440px);
-  align-items: center;
-  gap: 64px;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 48px 40px;
-
-  @media (max-width: 960px) {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 32px 16px 56px;
-    align-items: start;
-  }
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
 `;
 
-const Top = styled.div`
-  position: absolute;
-  top: 28px;
-  left: 40px;
-  right: 40px;
-  z-index: 2;
+const BrandPanel = styled.aside`
+  position: relative;
+  overflow: hidden;
+  background: ${t.blue};
+  color: ${t.surface};
+  padding: 48px 56px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  gap: 48px;
 
-  b { font-size: 26px; font-weight: 600; letter-spacing: -0.04em; color: ${t.text}; }
-  @media (max-width: 960px) { position: static; grid-row: 1; }
+  @media (max-width: 900px) { padding: 24px 20px 32px; gap: 28px; }
 `;
 
-const Lang = styled.div`
-  display: inline-flex;
-  gap: 2px;
-  button {
-    border: 0;
-    background: none;
-    color: ${t.textMuted};
-    font-size: 14px;
-    padding: 6px 10px;
-    border-radius: ${t.radius.pill};
-    cursor: pointer;
-    &[aria-pressed='true'] { color: ${t.text}; background: rgba(255, 255, 255, 0.08); }
-  }
+const LogoChip = styled.div`
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: ${t.surface};
+`;
+
+const rise = keyframes`
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
 `;
 
 const Hero = styled.div`
   position: relative;
   z-index: 1;
+  max-width: 520px;
+  animation: ${rise} 0.7s ${t.ease} both;
 
   h1 {
-    font-size: clamp(44px, 6.6vw, 92px);
+    color: ${t.surface};
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 700;
     letter-spacing: -0.035em;
-    line-height: 1.02;
-    max-width: 11ch;
+    line-height: 1.04;
   }
   p {
-    margin-top: 28px;
-    max-width: 40ch;
-    font-size: clamp(17px, 1.6vw, 20px);
-    line-height: 1.75;
-    color: ${t.textMuted};
+    margin-top: 20px;
+    max-width: 38ch;
+    font-size: 18px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
   }
-  @media (max-width: 960px) { h1 { max-width: none; } }
+  @media (max-width: 900px) { h1 { font-size: 32px; } p { display: none; } }
+`;
+
+const FormSide = styled.main`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  @media (max-width: 900px) { padding: 28px 16px 48px; align-items: flex-start; }
+`;
+
+const LangCorner = styled.div`
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  @media (max-width: 900px) { position: static; margin-bottom: 20px; }
 `;
 
 const Panel = styled.div`
-  position: relative;
-  z-index: 1;
-  padding: 40px;
-  border-radius: 28px;
-  border: 1px solid ${t.lineStrong};
-  background: rgba(11, 18, 28, 0.82);
-  backdrop-filter: blur(18px);
+  width: 100%;
+  max-width: 420px;
+  animation: ${rise} 0.6s ${t.ease} 0.08s both;
 
-  h2 { font-size: 28px; }
-  > p { margin-top: 10px; color: ${t.textMuted}; font-size: 15px; }
+  h2 { font-size: 30px; }
+  > p { margin-top: 8px; color: ${t.textMuted}; }
   form { margin-top: 32px; display: grid; gap: 18px; }
 
-  @media (max-width: 640px) { padding: 28px 20px; }
+  @media (max-width: 900px) { display: flex; flex-direction: column; }
 `;
 
 const Demo = styled.div`
   margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid ${t.line};
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid ${t.line};
+  background: ${t.surface};
   font-size: 14px;
   color: ${t.textMuted};
 
-  strong { display: block; color: ${t.text}; font-weight: 500; margin-bottom: 6px; }
-  small { display: block; margin-top: 12px; font-size: 13px; }
+  strong { display: block; color: ${t.text}; font-weight: 600; margin-bottom: 4px; }
   button { margin-top: 14px; }
 `;
 
@@ -144,24 +148,27 @@ export function LoginPage() {
   const offerDemo = import.meta.env.DEV || error?.code === 'NETWORK' || demo;
 
   return (
-    <>
-      <Beams $fixed $top="34%" $right="-10%" $top2="58%" $right2="22%" />
-      <Screen>
-        <Top>
-          <b>T2</b>
-          <Lang role="group" aria-label={tr('nav.language')}>
-            {LANGUAGES.map((code) => (
-              <button key={code} aria-pressed={lang === code} onClick={() => setLang(code)}>
-                {code === 'tr' ? 'Türkçe' : 'English'}
-              </button>
-            ))}
-          </Lang>
-        </Top>
-
+    <Screen>
+      <BrandPanel>
+        <LogoChip><Logo $height={44} /></LogoChip>
         <Hero>
           <h1>{tr('login.heroTitle')}</h1>
           <p>{tr('login.heroText')}</p>
         </Hero>
+        <div />
+        <BrandCircles $size={420} $right="-170px" $bottom="-170px" />
+      </BrandPanel>
+
+      <FormSide>
+        <LangCorner>
+          <Segmented
+            small
+            label={tr('nav.language')}
+            value={lang}
+            onChange={setLang}
+            options={LANGUAGES.map((code) => ({ value: code, label: code === 'tr' ? 'Türkçe' : 'English' }))}
+          />
+        </LangCorner>
 
         <Panel>
           <h2>{tr('login.title')}</h2>
@@ -184,23 +191,17 @@ export function LoginPage() {
 
           {offerDemo && (
             <Demo>
-              {demo ? (
-                <>
-                  <strong>{tr('login.demoActive')}</strong>
-                  {tr('login.demoAccounts')}
-                  <div><Button $small $variant="secondary" onClick={() => toggleDemo(false)}>{tr('login.demoExit')}</Button></div>
-                </>
-              ) : (
-                <>
-                  <strong>{tr('login.demoTitle')}</strong>
-                  {tr('login.demoText')}
-                  <div><Button $small $variant="secondary" onClick={() => toggleDemo(true)}>{tr('login.demoButton')}</Button></div>
-                </>
-              )}
+              <strong>{demo ? tr('login.demoActive') : tr('login.demoTitle')}</strong>
+              {demo ? tr('login.demoAccounts') : tr('login.demoText')}
+              <div>
+                <Button $small $variant="secondary" onClick={() => toggleDemo(!demo)}>
+                  {demo ? tr('login.demoExit') : tr('login.demoButton')}
+                </Button>
+              </div>
             </Demo>
           )}
         </Panel>
-      </Screen>
-    </>
+      </FormSide>
+    </Screen>
   );
 }
