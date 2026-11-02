@@ -45,7 +45,7 @@ const Brand = styled(NavLink)`
   text-decoration: none;
 
   span { font-size: 15px; font-weight: 600; color: ${t.textSoft}; padding-left: 12px; border-left: 1px solid ${t.line}; }
-  @media (max-width: 640px) { span { display: none; } svg { height: 30px; } }
+  @media (max-width: 640px) { span { display: none; } svg { height: 34px; } }
 `;
 
 const Nav = styled.nav`
@@ -248,7 +248,7 @@ export function AppShell() {
       )}
       <Bar>
         <Inner>
-          <Brand to="/"><Logo height={34} /><span>{tr('app.name')}</span></Brand>
+          <Brand to="/"><Logo height={42} /><span>{tr('app.name')}</span></Brand>
           <Nav aria-label="Main" ref={navRef}>
             <Indicator style={navIndicator} $color={t.blueTint} $flat />
             {links.map(([to, label]) => <NavLink key={to} to={to} end>{label}</NavLink>)}
