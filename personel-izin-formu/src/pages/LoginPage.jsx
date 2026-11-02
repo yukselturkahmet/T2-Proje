@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { session } from '../api/client';
 import { useAuth } from '../auth/AuthProvider';
-import { BrandCircles, Logo } from '../components/Brand';
+import { Logo } from '../components/Brand';
 import { Button } from '../components/Button';
 import { Notice, useTitle } from '../components/Feedback';
 import { Field } from '../components/Form';
@@ -32,15 +32,6 @@ const BrandPanel = styled.aside`
   @media (max-width: 900px) { padding: 24px 20px 32px; gap: 28px; }
 `;
 
-const LogoChip = styled.div`
-  position: relative;
-  z-index: 1;
-  align-self: flex-start;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: ${t.surface};
-`;
-
 const rise = keyframes`
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
@@ -67,6 +58,16 @@ const Hero = styled.div`
     color: rgba(255, 255, 255, 0.82);
   }
   @media (max-width: 900px) { h1 { font-size: 32px; } p { display: none; } }
+`;
+
+// The large logo at the bottom of the brand panel.
+const BigMark = styled.div`
+  position: relative;
+  z-index: 1;
+  align-self: flex-end;
+  width: min(520px, 100%);
+  animation: ${rise} 0.8s ${t.ease} 0.1s both;
+  @media (max-width: 900px) { display: none; }
 `;
 
 const FormSide = styled.main`
@@ -150,13 +151,12 @@ export function LoginPage() {
   return (
     <Screen>
       <BrandPanel>
-        <LogoChip><Logo $height={44} /></LogoChip>
+        <div style={{ position: 'relative', zIndex: 1 }}><Logo variant="reversed" height={52} /></div>
         <Hero>
           <h1>{tr('login.heroTitle')}</h1>
           <p>{tr('login.heroText')}</p>
         </Hero>
-        <div />
-        <BrandCircles $size={420} $right="-170px" $bottom="-170px" />
+        <BigMark><Logo variant="decor" decorative /></BigMark>
       </BrandPanel>
 
       <FormSide>
