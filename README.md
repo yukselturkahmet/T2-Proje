@@ -1,15 +1,16 @@
 # T2 Leave
 
-Staff leave management for T2: employees request leave and track their balance;
-admins approve or reject requests and manage employees. The rules of Turkish
-Labour Law No. 4857 (as amended by Law No. 7578, in force since 1 May 2026) are
-built in and checked both while a request is being filled in and on the server.
+Staff leave management for T2. Employees request leave and follow their
+balance; admins approve or reject requests and manage employees. Leave rules
+are built in and checked twice: live while a request is being filled in, and
+again on the server before it is saved.
 
-The interface is available in Turkish and English and uses T2's own brand:
-the company logo (as a background-free SVG traced from the original artwork)
-and its blue and green, with a large version of the logo on the brand panels. Option switches (filters,
-language, year, navigation) use a highlight that slides to the selected
-option.
+- **Web app:** React, Turkish and English, in T2's own blue and green with the
+  company logo (a background-free SVG). Option switches (filters, language,
+  year, navigation) use a highlight that slides to the selected option.
+- **API:** Node.js, GraphQL and PostgreSQL.
+- **Shared rules:** one rule file used by both sides, so the form and the
+  server never disagree.
 
 ## What it does
 
@@ -84,6 +85,23 @@ personel-izin-formu/     Web app (React 18, Vite, styled-components)
 shared/                  leave rules and holiday calendar, used by both sides
 ```
 
+## API
+
+One endpoint, `POST /graphql`, plus `GET /health`. Send the token from `login`
+as `Authorization: Bearer <token>`.
+
+| Operation | Who | Purpose |
+| --- | --- | --- |
+| `login`, `changePassword` | everyone | Sign in, change own password |
+| `me`, `myLeaveRequests` | signed in | Own profile, balance and requests |
+| `requestLeave`, `cancelLeave` | signed in | Create a request, withdraw one |
+| `leaveRequests(filter)`, `overview` | admin | Search all requests, approval queue and who is away |
+| `decideLeave` | admin | Approve or reject with a note |
+| `users`, `createUser`, `updateUser` | admin | Manage employees, passwords and balance corrections |
+
+Errors carry a stable `extensions.code` (for example `UNAUTHENTICATED`,
+`FORBIDDEN`, `NOT_FOUND`), plus `params` for the message, so the app can show a translated message.
+
 ## Getting started
 
 Requirements: Node.js 20.12 or newer and PostgreSQL.
@@ -100,7 +118,8 @@ npm run dev                 # http://localhost:4000/graphql
 
 `npm run setup` creates the tables and the first admin account. To try the app
 with sample people and requests instead, run `npm run seed:demo` (all demo
-accounts use the password `Demo1234`).
+accounts use the password `Demo1234`). The demo sign-ins are `admin` (admin),
+`ayse.yilmaz`, `mehmet.kaya`, `zeynep.demir` and `can.ozturk` (employees).
 
 Coming from the first version of this project? `npm run migrate:legacy` copies
 accounts from the old `employees` and `admins` tables. Set their names and hire
