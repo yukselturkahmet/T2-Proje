@@ -9,8 +9,9 @@ export const Table = styled.table`
   th {
     text-align: left;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     color: ${t.textMuted};
+    background: ${t.surfaceSoft};
     padding: 16px 20px;
     border-bottom: 1px solid ${t.line};
     white-space: nowrap;
@@ -21,7 +22,9 @@ export const Table = styled.table`
     vertical-align: top;
   }
   tbody tr:last-child td { border-bottom: 0; }
-  td strong { color: ${t.text}; font-weight: 500; }
+  tbody tr { transition: background-color 0.15s ease; }
+  tbody tr:hover { background: ${t.surfaceSoft}; }
+  td strong { color: ${t.text}; font-weight: 600; }
   td:first-child { min-width: 150px; }
   td small { display: block; margin-top: 4px; color: ${t.textMuted}; font-size: 13px; line-height: 1.45; }
   .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
