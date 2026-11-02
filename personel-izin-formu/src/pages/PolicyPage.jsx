@@ -4,7 +4,7 @@ import { hasHolidayCalendar, holidaysOf } from '@shared/calendar.js';
 import { LEAVE_TYPES, LEAVE_TYPE_CODES } from '@shared/policy.js';
 import { PageBody, PageHeader, Section } from '../components/Page';
 import { Segmented } from '../components/Segmented';
-import { Card, Tag } from '../components/Surface';
+import { Card } from '../components/Surface';
 import { Notice } from '../components/Feedback';
 import { Table } from '../components/Table';
 import { useI18n } from '../i18n/I18nProvider';
@@ -74,7 +74,7 @@ export function PolicyPage() {
         <Table>
           <thead>
             <tr>
-              {['type', 'limit', 'notice', 'past', 'source'].map((c) => <th key={c}>{tr(`policy.columns.${c}`)}</th>)}
+              {['type', 'limit', 'notice', 'past'].map((c) => <th key={c}>{tr(`policy.columns.${c}`)}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -89,11 +89,6 @@ export function PolicyPage() {
                   <td>{limit(rule)}{!rule.paid && <small>{tr('policy.paidNo')}</small>}</td>
                   <td className="num">{rule.minNoticeDays ? format.days(rule.minNoticeDays) : tr('policy.none')}</td>
                   <td className="num">{rule.maxPastDays ? format.days(rule.maxPastDays) : tr('policy.none')}</td>
-                  <td>
-                    {rule.source === 'law'
-                      ? <Tag>{rule.legalRef}</Tag>
-                      : <Tag $tone={t.status.amber}>{tr('policy.company')}</Tag>}
-                  </td>
                 </tr>
               );
             })}
