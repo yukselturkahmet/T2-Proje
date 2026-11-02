@@ -24,6 +24,7 @@ const VARIANTS = {
 
 const Svg = styled.svg`
   display: block;
+  shape-rendering: geometricPrecision;
   height: ${(p) => (p.$height ? `${p.$height}px` : 'auto')};
   width: ${(p) => (p.$height ? 'auto' : '100%')};
   flex: none;
@@ -35,8 +36,9 @@ export function Logo({ variant = 'color', height, className, decorative = false 
   const gapId = `t2-gap-${useId().replace(/:/g, '')}`;
   // The gap between the circles is ~15 units in the artwork. At small sizes
   // that is under a pixel and the circles look like they collide, so keep
-  // it at least ~2px wide on screen.
-  const gap = height ? Math.max(ARTWORK_GAP, (2 * VIEW_HEIGHT) / height) : ARTWORK_GAP;
+  // it about 1.8px wide on screen. (Wider makes the blue circle's cut
+  // corners look like sharp spikes.)
+  const gap = height ? Math.max(ARTWORK_GAP, (1.8 * VIEW_HEIGHT) / height) : ARTWORK_GAP;
   return (
     <Svg
       viewBox="14 14 772 412"
