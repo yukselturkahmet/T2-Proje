@@ -6,8 +6,8 @@ Labour Law No. 4857 (as amended by Law No. 7578, in force since 1 May 2026) are
 built in and checked both while a request is being filled in and on the server.
 
 The interface is available in Turkish and English and uses T2's own brand:
-the company logo and its blue (#0B5181) and green (#7DB543), with the logo's
-two overlapping circles as the main visual motif. Option switches (filters,
+the company logo (as a background-free SVG traced from the original artwork)
+and its blue and green, with a large version of the logo on the brand panels. Option switches (filters,
 language, year, navigation) use a highlight that slides to the selected
 option.
 
@@ -35,18 +35,18 @@ option.
 All rules live in one file, [`shared/policy.js`](shared/policy.js), used by
 both the API and the web app. The Rules page in the app lists them.
 
-| Type | Limit | Notice | Backdating | Basis |
-| --- | --- | --- | --- | --- |
-| Annual | From balance: 14 / 20 / 26 days by seniority, at least 20 if aged ≤18 or ≥50; needs 1 year of service | 3 days | — | 4857 m.53–56 |
-| Sick | No limit, doctor's report | — | 30 days | 5510 m.18 |
-| Marriage | 3 days | — | — | 4857 Ek m.2 |
-| Paternity | 10 days | — | 30 days | 4857 Ek m.2 |
-| Bereavement | 3 days | — | 30 days | 4857 Ek m.2 |
-| Adoption | 3 days | — | 30 days | 4857 Ek m.2 |
-| Disabled / chronically ill child | 10 days a year | — | 30 days | 4857 Ek m.2 |
-| Maternity | 24 weeks (26 for multiple pregnancy), calendar days | — | 30 days | 4857 m.74 |
-| Personal (company rule) | 5 days a year | 1 day | — | Company |
-| Unpaid (company rule) | 30 days per request | 7 days | — | Company |
+| Type | Limit | Notice | Backdating |
+| --- | --- | --- | --- |
+| Annual | From balance: 14 / 20 / 26 days by seniority, at least 20 if aged ≤18 or ≥50; needs 1 year of service | 3 days | — |
+| Sick | No limit, doctor's report | — | 30 days |
+| Marriage | 3 days | — | — |
+| Paternity | 10 days | — | 30 days |
+| Bereavement | 3 days | — | 30 days |
+| Adoption | 3 days | — | 30 days |
+| Disabled / chronically ill child | 10 days a year | — | 30 days |
+| Maternity | 24 weeks (26 for multiple pregnancy), calendar days | — | 30 days |
+| Personal (company rule) | 5 days a year | 1 day | — |
+| Unpaid (company rule) | 30 days per request | 7 days | — |
 
 General rules: weekends and public holidays aren't deducted and holiday eves
 count as half a day; open requests can't overlap; requests can start at most
