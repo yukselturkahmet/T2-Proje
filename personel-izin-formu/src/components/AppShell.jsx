@@ -45,7 +45,7 @@ const Brand = styled(NavLink)`
   text-decoration: none;
 
   span { font-size: 15px; font-weight: 600; color: ${t.textSoft}; padding-left: 12px; border-left: 1px solid ${t.line}; }
-  @media (max-width: 640px) { span { display: none; } img { height: 30px; } }
+  @media (max-width: 640px) { span { display: none; } svg { height: 30px; } }
 `;
 
 const Nav = styled.nav`
@@ -69,7 +69,7 @@ const Nav = styled.nav`
     white-space: nowrap;
     transition: color 0.25s ease;
     &:hover { color: ${t.text}; }
-    &.active { color: ${t.blue}; font-weight: 600; }
+    &.active { color: ${t.blue}; }
   }
   @media (max-width: 640px) {
     a { padding: 7px 10px; font-size: 14px; }
@@ -248,7 +248,7 @@ export function AppShell() {
       )}
       <Bar>
         <Inner>
-          <Brand to="/"><Logo $height={34} /><span>{tr('app.name')}</span></Brand>
+          <Brand to="/"><Logo height={34} /><span>{tr('app.name')}</span></Brand>
           <Nav aria-label="Main" ref={navRef}>
             <Indicator style={navIndicator} $color={t.blueTint} $flat />
             {links.map(([to, label]) => <NavLink key={to} to={to} end>{label}</NavLink>)}
