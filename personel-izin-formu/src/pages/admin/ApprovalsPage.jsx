@@ -41,10 +41,11 @@ const Item = styled.li`
   padding: 24px;
   border-radius: 20px;
   border: 1px solid ${t.line};
-  background: ${t.raised};
+  background: ${t.surface};
+  box-shadow: ${t.shadow};
 
   header { display: flex; align-items: center; gap: 14px; }
-  header h3 { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; }
+  header h3 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
   header p { font-size: 14px; color: ${t.textMuted}; }
 
   .details {
@@ -57,7 +58,7 @@ const Item = styled.li`
     border-bottom: 1px solid ${t.line};
   }
   .details span { display: block; font-size: 13px; color: ${t.textMuted}; }
-  .details strong { display: block; margin-top: 2px; color: ${t.text}; font-weight: 500; }
+  .details strong { display: block; margin-top: 2px; color: ${t.text}; font-weight: 600; }
   .reason { margin-top: 16px; color: ${t.textSoft}; }
   .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 20px; }
   .actions .balance { margin-right: auto; font-size: 14px; color: ${t.textMuted}; }
@@ -74,7 +75,7 @@ const Side = styled(Card)`
   ul { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 12px; }
   ul:last-child { margin-bottom: 0; }
   li { display: flex; align-items: center; gap: 12px; font-size: 14px; }
-  li strong { display: block; color: ${t.text}; font-weight: 500; }
+  li strong { display: block; color: ${t.text}; font-weight: 600; }
   li span { color: ${t.textMuted}; }
   p { color: ${t.textMuted}; font-size: 14px; margin: 10px 0 28px; }
 `;
@@ -160,7 +161,7 @@ export function ApprovalsPage() {
                       </span>
                     )}
                     {own ? (
-                      <Tag $color={t.textMuted} $bg="transparent" $border={t.line}>{tr('errors.SELF_APPROVAL')}</Tag>
+                      <Tag $tone={t.status.gray}>{tr('errors.SELF_APPROVAL')}</Tag>
                     ) : (
                       <>
                         <Button $small $variant="danger" disabled={deciding} onClick={() => { setRejecting(r); setActionError(null); }}>
