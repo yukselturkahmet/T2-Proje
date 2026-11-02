@@ -262,9 +262,9 @@ export default {
 
   policy: {
     title: 'İzin kuralları',
-    intro: 'Uygulama bu kuralları talepleri gönderirken ve onaylarken uygular. Yasal kurallar 4857 sayılı İş Kanunu’na (7578 sayılı Kanun değişiklikleriyle) dayanır.',
+    intro: 'Uygulama bu kuralları talepler gönderilirken ve onaylanırken uygular.',
     typesTitle: 'İzin türleri',
-    columns: { type: 'Tür', limit: 'Sınır', notice: 'Önceden bildirim', past: 'Geriye dönük', source: 'Dayanak' },
+    columns: { type: 'Tür', limit: 'Sınır', notice: 'Önceden bildirim', past: 'Geriye dönük' },
     perRequest: 'talep başına {n}',
     perYear: 'yılda {n}',
     fromBalance: 'yıllık bakiyeden',
