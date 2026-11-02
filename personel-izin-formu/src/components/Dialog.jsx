@@ -1,21 +1,30 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { t } from '../theme/tokens';
 import { useI18n } from '../i18n/I18nProvider';
+
+const appear = keyframes`
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+`;
+
+const fade = keyframes`from { opacity: 0; } to { opacity: 1; }`;
 
 const Native = styled.dialog`
   width: min(94vw, ${(p) => p.$width || 520}px);
   max-height: 90vh;
   padding: 0;
-  border: 1px solid ${t.lineStrong};
+  border: 1px solid ${t.line};
   border-radius: 24px;
-  background: #0B121C;
+  background: ${t.surface};
   color: ${t.textSoft};
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  box-shadow: ${t.shadowPop};
 
+  &[open] { animation: ${appear} 0.32s ${t.ease}; }
   &::backdrop {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
+    background: ${t.overlay};
+    backdrop-filter: blur(3px);
+    animation: ${fade} 0.25s ease;
   }
 `;
 
@@ -36,12 +45,13 @@ const Close = styled.button`
   height: 36px;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
+  background: ${t.surfaceSoft};
   color: ${t.textSoft};
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  &:hover { background: rgba(255, 255, 255, 0.12); color: ${t.text}; }
+  transition: background-color 0.15s ease, transform 0.2s ${t.ease};
+  &:hover { background: ${t.line}; color: ${t.text}; transform: rotate(90deg); }
 `;
 
 const Body = styled.div`
