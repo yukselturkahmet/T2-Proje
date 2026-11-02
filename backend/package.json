@@ -1,20 +1,23 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "name": "t2-leave-api",
+  "version": "2.0.0",
+  "description": "GraphQL API for the T2 staff leave application",
+  "private": true,
   "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.12"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "setup": "node scripts/setup.js",
+    "seed:demo": "node scripts/seed-demo.js",
+    "migrate:legacy": "node scripts/migrate-legacy.js",
+    "test": "node --test --test-concurrency=1 \"test/**/*.test.js\""
+  },
   "dependencies": {
-    "apollo-server": "^3.13.0",
     "graphql": "^16.9.0",
-    "mysql2": "^3.10.2",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.3"
