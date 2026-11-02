@@ -262,9 +262,9 @@ export default {
 
   policy: {
     title: 'Leave rules',
-    intro: 'The app applies these rules when requests are sent and approved. Statutory rules follow Turkish Labour Law No. 4857, as amended by Law No. 7578.',
+    intro: 'The app applies these rules when requests are sent and approved.',
     typesTitle: 'Leave types',
-    columns: { type: 'Type', limit: 'Limit', notice: 'Notice', past: 'Backdating', source: 'Basis' },
+    columns: { type: 'Type', limit: 'Limit', notice: 'Notice', past: 'Backdating' },
     perRequest: '{n} per request',
     perYear: '{n} per year',
     fromBalance: 'from annual balance',
