@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { hasHolidayCalendar, holidaysOf } from '@shared/calendar.js';
 import { LEAVE_TYPES, LEAVE_TYPE_CODES } from '@shared/policy.js';
-import { PageBody, PageHeader, Section, Segmented } from '../components/Page';
+import { PageBody, PageHeader, Section } from '../components/Page';
+import { Segmented } from '../components/Segmented';
 import { Card, Tag } from '../components/Surface';
 import { Notice } from '../components/Feedback';
 import { Table } from '../components/Table';
@@ -27,7 +28,7 @@ const Tiers = styled.dl`
   div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid ${t.line}; }
   div:last-child { border-bottom: 0; }
   dt { color: ${t.textSoft}; }
-  dd { margin: 0; color: ${t.text}; font-weight: 500; text-align: right; }
+  dd { margin: 0; color: ${t.text}; font-weight: 600; text-align: right; }
 `;
 
 const Rules = styled.ul`
@@ -91,7 +92,7 @@ export function PolicyPage() {
                   <td>
                     {rule.source === 'law'
                       ? <Tag>{rule.legalRef}</Tag>
-                      : <Tag $color={t.amber} $bg={t.amberTint} $border="rgba(242, 184, 75, 0.35)">{tr('policy.company')}</Tag>}
+                      : <Tag $tone={t.status.amber}>{tr('policy.company')}</Tag>}
                   </td>
                 </tr>
               );
@@ -118,14 +119,15 @@ export function PolicyPage() {
       <Section>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
           <h2 style={{ fontSize: 24 }}>{tr('policy.holidaysTitle', { year })}</h2>
-          <Segmented role="group">
-            {[thisYear, thisYear + 1].map((y) => (
-              <button key={y} aria-pressed={year === y} onClick={() => setYear(y)}>{y}</button>
-            ))}
-          </Segmented>
+          <Segmented
+            label={tr('policy.holidaysTitle', { year })}
+            value={year}
+            onChange={setYear}
+            options={[thisYear, thisYear + 1].map((y) => ({ value: y, label: String(y) }))}
+          />
         </div>
         {!hasHolidayCalendar(year) && <Notice $tone="warning" style={{ marginBottom: 16 }}>{tr('policy.noCalendar', { year })}</Notice>}
-        <HolidayList>
+        <HolidayList key={year}>
           {holidaysOf(year).map((h) => (
             <li key={h.date}>
               <span>{tr(`holidays.${h.name}`)} {h.half && <small>({tr('policy.half')})</small>}</span>
