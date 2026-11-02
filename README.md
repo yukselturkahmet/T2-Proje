@@ -5,9 +5,11 @@ admins approve or reject requests and manage employees. The rules of Turkish
 Labour Law No. 4857 (as amended by Law No. 7578, in force since 1 May 2026) are
 built in and checked both while a request is being filled in and on the server.
 
-The interface is available in Turkish and English, and follows the visual
-language of [t2.com.tr](https://www.t2.com.tr): black canvas, Inter, large
-medium-weight headings and an electric-blue accent.
+The interface is available in Turkish and English and uses T2's own brand:
+the company logo and its blue (#0B5181) and green (#7DB543), with the logo's
+two overlapping circles as the main visual motif. Option switches (filters,
+language, year, navigation) use a highlight that slides to the selected
+option.
 
 ## What it does
 
@@ -74,7 +76,8 @@ personel-izin-formu/     Web app (React 18, Vite, styled-components)
   src/
     api/                 GraphQL client, operations, in-browser demo backend
     auth/                session context
-    components/          design system: buttons, forms, cards, dialogs, layout
+    components/          design system: buttons, forms, cards, dialogs, layout,
+                         brand logo, sliding option switch
     i18n/                Turkish and English text
     pages/               screens (admin screens in pages/admin)
     theme/               colour tokens and global styles
