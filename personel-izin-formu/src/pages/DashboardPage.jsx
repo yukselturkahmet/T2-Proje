@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { CANCEL_LEAVE, MY_REQUESTS } from '../api/operations';
 import { useAuth } from '../auth/AuthProvider';
-import { Beams } from '../components/Beams';
+import { BrandCircles } from '../components/Brand';
 import { Button } from '../components/Button';
 import { Dialog, DialogActions } from '../components/Dialog';
 import { EmptyState, LoadError, Loading, Notice, useTitle, useToast } from '../components/Feedback';
-import { PageBody, Section, Segmented, Toolbar } from '../components/Page';
+import { PageBody, Section, Toolbar } from '../components/Page';
+import { Segmented } from '../components/Segmented';
 import { Card, StatusBadge, Tag } from '../components/Surface';
 import { useMutation, useQuery } from '../hooks/useApi';
 import { useI18n } from '../i18n/I18nProvider';
@@ -19,6 +20,9 @@ const Hero = styled(Card)`
   position: relative;
   overflow: hidden;
   padding: 44px;
+  background: ${t.blue};
+  border-color: ${t.blue};
+  color: ${t.surface};
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 40px;
@@ -29,26 +33,27 @@ const Hero = styled(Card)`
 `;
 
 const Greeting = styled.h1`
+  color: ${t.surface};
   font-size: clamp(32px, 4vw, 48px);
 `;
 
 const Big = styled.div`
   margin-top: 36px;
-  color: ${t.textMuted};
+  color: rgba(255, 255, 255, 0.78);
   font-size: 15px;
 
   strong {
     display: block;
     margin-top: 6px;
-    color: ${t.text};
+    color: ${t.surface};
     font-size: clamp(72px, 11vw, 132px);
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: -0.05em;
     line-height: 0.95;
     font-variant-numeric: tabular-nums;
   }
-  strong small { font-size: 0.32em; letter-spacing: -0.01em; color: ${t.textSoft}; margin-left: 10px; }
-  p { margin-top: 18px; color: ${t.textSoft}; }
+  strong small { font-size: 0.32em; font-weight: 600; letter-spacing: -0.01em; color: ${t.green}; margin-left: 10px; }
+  p { margin-top: 18px; color: rgba(255, 255, 255, 0.85); }
 `;
 
 const Breakdown = styled.dl`
@@ -59,20 +64,31 @@ const Breakdown = styled.dl`
   padding: 24px;
   @media (max-width: 640px) { gap: 18px 16px; padding: 18px; dd { font-size: 19px; } }
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid ${t.line};
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(8px);
 
-  dt { font-size: 13px; color: ${t.textMuted}; }
-  dd { margin: 4px 0 0; color: ${t.text}; font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  dt { font-size: 13px; color: rgba(255, 255, 255, 0.72); }
+  dd { margin: 4px 0 0; color: ${t.surface}; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
 `;
 
+const slideIn = keyframes`
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+`;
+
+// Re-mounted (via key) when the filter changes, so the rows ease in.
 const List = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: 12px;
+
+  li { animation: ${slideIn} 0.4s ${t.ease} both; }
+  li:nth-child(2) { animation-delay: 0.04s; }
+  li:nth-child(3) { animation-delay: 0.08s; }
+  li:nth-child(n + 4) { animation-delay: 0.12s; }
 `;
 
 const Row = styled.li`
@@ -83,12 +99,14 @@ const Row = styled.li`
   padding: 20px 24px;
   border-radius: 18px;
   border: 1px solid ${t.line};
-  background: ${t.raised};
+  background: ${t.surface};
+  box-shadow: ${t.shadow};
+  transition: border-color 0.2s ease, transform 0.2s ${t.ease};
+  &:hover { border-color: ${t.lineStrong}; }
 
-  h3 { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; }
+  h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
   .muted { color: ${t.textMuted}; font-size: 14px; margin-top: 4px; }
   .note { grid-column: 1 / -1; font-size: 14px; color: ${t.textMuted}; padding-top: 12px; border-top: 1px solid ${t.line}; }
-  .note strong { color: ${t.textSoft}; font-weight: 500; }
 
   @media (max-width: 760px) {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -143,7 +161,7 @@ export function DashboardPage() {
       )}
 
       <Hero>
-        <Beams $top="-10%" $right="-12%" $top2="30%" $right2="10%" />
+        <BrandCircles $size={320} $right="-120px" $bottom="-150px" />
         <div>
           <Greeting>{tr('dashboard.greeting', { name: user.firstName })}</Greeting>
           <Big>
@@ -166,20 +184,19 @@ export function DashboardPage() {
             <div><dt>{tr('dashboard.pending')}</dt><dd>{format.days(balance.pending)}</dd></div>
             <div><dt>{tr('dashboard.adjustment')}</dt><dd>{format.days(balance.adjustment)}</dd></div>
           </Breakdown>
-          <Button onClick={() => navigate('/request')}>{tr('dashboard.newRequest')}</Button>
+          <Button $variant="inverse" onClick={() => navigate('/request')}>{tr('dashboard.newRequest')}</Button>
         </div>
       </Hero>
 
       <Section>
         <Toolbar style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: 24 }}>{tr('dashboard.myRequests')}</h2>
-          <Segmented role="group">
-            {Object.keys(FILTERS).map((key) => (
-              <button key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}>
-                {tr(`dashboard.filters.${key}`)}
-              </button>
-            ))}
-          </Segmented>
+          <Segmented
+            label={tr('dashboard.myRequests')}
+            value={filter}
+            onChange={setFilter}
+            options={Object.keys(FILTERS).map((key) => ({ value: key, label: tr(`dashboard.filters.${key}`) }))}
+          />
         </Toolbar>
 
         {error && <LoadError error={error} onRetry={reload} />}
@@ -192,7 +209,7 @@ export function DashboardPage() {
           />
         )}
 
-        <List>
+        <List key={filter}>
           {shown.map((r) => {
             const cancellable = r.status === 'PENDING' || (r.status === 'APPROVED' && r.startDate > today);
             return (
@@ -215,7 +232,7 @@ export function DashboardPage() {
                   <p className="note">
                     {r.decisionNote && <>{r.decisionNote} </>}
                     {r.decidedBy && (
-                      <Tag $color={t.textMuted} $bg="transparent" $border={t.line}>
+                      <Tag $tone={t.status.gray}>
                         {tr('dashboard.decisionBy', { name: `${r.decidedBy.firstName} ${r.decidedBy.lastName}`, date: format.date(r.decidedAt) })}
                       </Tag>
                     )}
