@@ -49,27 +49,3 @@ export const Toolbar = styled.div`
   gap: 12px;
   margin-bottom: 20px;
 `;
-
-// Segmented filter control (pill buttons).
-export const Segmented = styled.div`
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 4px;
-  border-radius: ${t.radius.pill};
-  border: 1px solid ${t.line};
-  background: ${t.raised};
-
-  button {
-    border: 0;
-    padding: 7px 16px;
-    border-radius: ${t.radius.pill};
-    background: transparent;
-    color: ${t.textMuted};
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    &:hover { color: ${t.text}; }
-    &[aria-pressed='true'] { background: ${t.blueTint}; color: #A9CBFF; }
-  }
-`;
